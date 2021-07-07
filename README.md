@@ -1,6 +1,9 @@
-# Giselle.Net.EtherNet
+# Giselle.Net.EtherNetIP
 
-- Practice Repository
+- CIP EtherNet/IP
+- Get/Set assembly data
+- Implicit messaging
+- Practice repository
 - Capture/Analyze with WireShark
 
 # Dependencies

@@ -1,0 +1,6 @@
+# eclipse
+.svn
+.gradle
+.vs
+bin
+obj

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31402.337
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giselle.Net.EtherNetIP", "Giselle.Net.EtherNetIP\Giselle.Net.EtherNetIP.csproj", "{2D640D55-7783-4EFC-8FA2-ED9D50397728}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giselle.Net.EtherNetIP.Test", "Giselle.Net.EtherNetIP.Test\Giselle.Net.EtherNetIP.Test.csproj", "{9A251CAE-DDA4-47C6-AA29-A352E91AE216}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2D640D55-7783-4EFC-8FA2-ED9D50397728}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D640D55-7783-4EFC-8FA2-ED9D50397728}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D640D55-7783-4EFC-8FA2-ED9D50397728}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D640D55-7783-4EFC-8FA2-ED9D50397728}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A251CAE-DDA4-47C6-AA29-A352E91AE216}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A251CAE-DDA4-47C6-AA29-A352E91AE216}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A251CAE-DDA4-47C6-AA29-A352E91AE216}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A251CAE-DDA4-47C6-AA29-A352E91AE216}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {29B43E47-A9C9-4791-AD15-09D471452C90}
+	EndGlobalSection
+EndGlobal

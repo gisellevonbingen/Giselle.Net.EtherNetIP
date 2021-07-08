@@ -7,6 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giselle.Net.EtherNetIP", "G
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giselle.Net.EtherNetIP.Test", "Giselle.Net.EtherNetIP.Test\Giselle.Net.EtherNetIP.Test.csproj", "{9A251CAE-DDA4-47C6-AA29-A352E91AE216}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9766F763-A7EE-468B-A075-0CCFD7388A8C}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

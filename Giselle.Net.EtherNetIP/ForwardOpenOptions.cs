@@ -17,7 +17,7 @@ namespace Giselle.Net.EtherNetIP
         public AssemblyObject T_O_Assembly { get; private set; }
 
         public ushort OriginatorUDPPort { get; set; }
-        public IPAddress Hostname { get; set; }
+        public IPAddress LocalAddress { get; set; }
 
         public ForwardOpenOptions()
         {
@@ -25,7 +25,7 @@ namespace Giselle.Net.EtherNetIP
             this.T_O_Assembly = new AssemblyObject() { InstanceID = KnownAssemblyInstanceID.PrimaryInput };
 
             this.OriginatorUDPPort = 2222;
-            this.Hostname = IPAddress.Loopback;
+            this.LocalAddress = IPAddress.Loopback;
         }
 
         public ForwardOpenOptions(ForwardOpenOptions other)
@@ -35,7 +35,7 @@ namespace Giselle.Net.EtherNetIP
             this.T_O_Assembly = new AssemblyObject(other.T_O_Assembly);
 
             this.OriginatorUDPPort = other.OriginatorUDPPort;
-            this.Hostname = other.Hostname;
+            this.LocalAddress = other.LocalAddress;
         }
 
     }

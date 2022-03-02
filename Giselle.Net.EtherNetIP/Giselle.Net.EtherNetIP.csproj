@@ -36,9 +36,6 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Giselle.Commons">
-      <HintPath>..\Libs\Giselle.Commons.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -64,6 +61,8 @@
     <Compile Include="CommandItemUnconnectedData.cs" />
     <Compile Include="CommonPacketCommand.cs" />
     <Compile Include="ConnectionPath.cs" />
+    <Compile Include="DataProcessor.cs" />
+    <Compile Include="IPAddressUtils.cs" />
     <Compile Include="PathSegment.cs" />
     <Compile Include="ConnectionType.cs" />
     <Compile Include="Encapsulation.cs" />

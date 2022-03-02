@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Giselle.Commons;
 
 namespace Giselle.Net.EtherNetIP
 {
@@ -75,10 +74,10 @@ namespace Giselle.Net.EtherNetIP
 
         public override int GetHashCode()
         {
-            var hash = ObjectUtils.HashSeed;
-            hash = hash.AccumulateHashCode(this.ClassID);
-            hash = hash.AccumulateHashCode(this.InstanceID);
-            hash = hash.AccumulateHashCode(this.AttributeID);
+            var hash = 17;
+            hash = hash * 31 + this.ClassID.GetHashCode();
+            hash = hash * 31 + this.InstanceID.GetHashCode();
+            hash = hash * 31 + this.AttributeID.GetHashCode();
             return hash;
         }
 
@@ -89,7 +88,7 @@ namespace Giselle.Net.EtherNetIP
 
         public bool Equals(RequestPath other)
         {
-            if (this.EqualsType(other) == false)
+            if (this.GetType().Equals(other.GetType()) == false)
             {
                 return false;
             }

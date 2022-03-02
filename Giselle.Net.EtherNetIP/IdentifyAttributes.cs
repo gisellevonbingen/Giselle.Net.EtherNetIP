@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Giselle.Commons;
 
 namespace Giselle.Net.EtherNetIP
 {
@@ -25,14 +24,17 @@ namespace Giselle.Net.EtherNetIP
         public uint SerialNumber { get; set; }
         public string ProductName { get; set; }
 
+        public IdentifyAttributes(ENIPProcessor processor) : this()
+        {
+            this.Read(processor);
+        }
+
         public void Read(ENIPProcessor processor)
         {
             this.VenderID = processor.ReadUShort();
             this.DeviceType = processor.ReadUShort();
             this.ProductCode = processor.ReadUShort();
-            var revision = new Revision();
-            revision.Read(processor);
-            this.Revision = revision;
+            this.Revision = new Revision(processor);
             this.Status = processor.ReadUShort();
             this.SerialNumber = processor.ReadUInt();
 
@@ -48,20 +50,21 @@ namespace Giselle.Net.EtherNetIP
             processor.WriteUShort(this.Status);
             processor.WriteUInt(this.SerialNumber);
 
-            processor.WriteByte((byte) this.ProductName.Length);
+            processor.WriteByte((byte)this.ProductName.Length);
             processor.WriteBytes(Encoding.UTF8.GetBytes(this.ProductName));
         }
 
         public override int GetHashCode()
         {
-            var hash = ObjectUtils.HashSeed;
-            hash = hash.AccumulateHashCode(this.VenderID);
-            hash = hash.AccumulateHashCode(this.DeviceType);
-            hash = hash.AccumulateHashCode(this.ProductCode);
-            hash = hash.AccumulateHashCode(this.Revision);
-            hash = hash.AccumulateHashCode(this.Status);
-            hash = hash.AccumulateHashCode(this.SerialNumber);
-            hash = hash.AccumulateHashCode(this.ProductName);
+            var hash = 17;
+            hash = hash * 31 + this.VenderID.GetHashCode();
+            hash = hash * 31 + this.DeviceType.GetHashCode();
+            hash = hash * 31 + this.ProductCode.GetHashCode();
+            hash = hash * 31 + this.Revision.GetHashCode();
+            hash = hash * 31 + this.Status.GetHashCode();
+
+            hash = hash * 31 + this.SerialNumber.GetHashCode();
+            hash = hash * 31 + this.ProductName?.GetHashCode() ?? 0;
             return hash;
         }
 
@@ -72,7 +75,7 @@ namespace Giselle.Net.EtherNetIP
 
         public bool Equals(IdentifyAttributes other)
         {
-            if (this.EqualsType(other) == false)
+            if (this.GetType().Equals(other.GetType()) == false)
             {
                 return false;
             }

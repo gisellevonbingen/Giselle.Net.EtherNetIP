@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
-using Giselle.Commons.IO;
-using Giselle.Commons.Net;
 
 namespace Giselle.Net.EtherNetIP
 {

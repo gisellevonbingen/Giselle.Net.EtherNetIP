@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Net.Sockets;
 using System.Text;
-using Giselle.Commons;
-using Giselle.Commons.Collections;
-using Giselle.Commons.Net;
 
 namespace Giselle.Net.EtherNetIP
 {
@@ -236,7 +232,7 @@ namespace Giselle.Net.EtherNetIP
 
             if (options.O_T_Assembly.ConnectionType == ConnectionType.Multicast)
             {
-                requestIPV4EndPoint.EndPoint.Address = ((int)GetMulticastAddress((uint)options.Hostname.ToIPv4Address())).ToIPv4Address(true);
+                requestIPV4EndPoint.EndPoint.Address = ((int)GetMulticastAddress((uint)options.LocalAddress.ToIPv4Address())).ToIPv4Address(true);
             }
             else
             {
@@ -256,7 +252,7 @@ namespace Giselle.Net.EtherNetIP
                 if (item is CommandItemUnconnectedDataResponse udResponse)
                 {
                     result.Error = udResponse.Error;
-                    result.ExtendedStatus = (ExtendedStatusError)udResponse.ExtendedStatus.Get(0);
+                    result.ExtendedStatus = udResponse.ExtendedStatus.Length > 0 ? (ExtendedStatusError)udResponse.ExtendedStatus[0] : ExtendedStatusError.Success;
 
                     var resProcessor = udResponse.DataProcessor;
 
@@ -265,10 +261,6 @@ namespace Giselle.Net.EtherNetIP
                         result.O_T_ConnectionID = resProcessor.ReadUInt();
                         result.T_O_ConnectionID = resProcessor.ReadUInt();
                         result.ConnectionSerialNumber = resProcessor.ReadUShort();
-                    }
-                    else
-                    {
-
                     }
 
                 }
@@ -341,7 +333,7 @@ namespace Giselle.Net.EtherNetIP
                 if (item is CommandItemUnconnectedDataResponse udResponse)
                 {
                     result.Error = udResponse.Error;
-                    result.ExtendedStatus = (ExtendedStatusError)udResponse.ExtendedStatus.Get(0);
+                    result.ExtendedStatus = udResponse.ExtendedStatus.Length > 0 ? (ExtendedStatusError)udResponse.ExtendedStatus[0] : ExtendedStatusError.Success;
                 }
 
             }

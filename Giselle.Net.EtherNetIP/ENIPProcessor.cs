@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Giselle.Commons.IO;
 
 namespace Giselle.Net.EtherNetIP
 {

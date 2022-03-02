@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Giselle.Commons;
 
 namespace Giselle.Net.EtherNetIP
 {
@@ -19,6 +18,11 @@ namespace Giselle.Net.EtherNetIP
 
         public byte Major { get; set; }
         public byte Minor { get; set; }
+
+        public Revision(ENIPProcessor processor) : this()
+        {
+            this.Read(processor);
+        }
 
         public void Read(ENIPProcessor processor)
         {
@@ -39,9 +43,9 @@ namespace Giselle.Net.EtherNetIP
 
         public override int GetHashCode()
         {
-            var hash = ObjectUtils.HashSeed;
-            hash = hash.AccumulateHashCode(this.Major);
-            hash = hash.AccumulateHashCode(this.Minor);
+            var hash = 17;
+            hash = hash * 31 + this.Major.GetHashCode();
+            hash = hash * 31 + this.Minor.GetHashCode();
             return hash;
         }
 
@@ -52,7 +56,7 @@ namespace Giselle.Net.EtherNetIP
 
         public bool Equals(Revision other)
         {
-            if (this.EqualsType(other) == false)
+            if (this.GetType().Equals(other.GetType()) == false)
             {
                 return false;
             }

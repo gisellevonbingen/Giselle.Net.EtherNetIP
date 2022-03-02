@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Giselle.Commons;
 
 namespace Giselle.Net.EtherNetIP
 {
@@ -28,7 +27,7 @@ namespace Giselle.Net.EtherNetIP
 
         public ushort ProductCode { get { return this.Read(KnownIdentifyAttributeID.ProductCode).ReadUShort(); } }
 
-        public Revision Revision { get { return new Revision().ConsumeSelect(v => { v.Read(this.Read(KnownIdentifyAttributeID.Revision)); return v; }); } }
+        public Revision Revision { get { return new Revision(this.Read(KnownIdentifyAttributeID.Revision)); } }
 
         public ushort Status { get { return this.Read(KnownIdentifyAttributeID.Status).ReadUShort(); } }
 
@@ -60,9 +59,9 @@ namespace Giselle.Net.EtherNetIP
         /// </summary>
         public byte HeartbeatInterval { get { return this.Read(KnownIdentifyAttributeID.HeartbeatInterval).ReadByte(); } }
 
-        public ClassAttributes ClassAttributes { get { return new ClassAttributes().ConsumeOwn(v => v.Read(this.Parent.GetAttribute(this.BaseStream, new RequestPath(KnownClassID.Identify, 0)))); } }
+        public ClassAttributes ClassAttributes { get { return new ClassAttributes(this.Parent.GetAttribute(this.BaseStream, new RequestPath(KnownClassID.Identify, 0))); } }
 
-        public IdentifyAttributes IdentifyAttributes { get { return new IdentifyAttributes().ConsumeOwn(v => v.Read(this.Read())); } }
+        public IdentifyAttributes IdentifyAttributes { get { return new IdentifyAttributes(this.Read()); } }
 
     }
 

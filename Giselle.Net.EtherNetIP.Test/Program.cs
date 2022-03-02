@@ -79,7 +79,7 @@ namespace Giselle.Net.EtherNetIP.Test
         {
             var openOptions = new ForwardOpenOptions();
             openOptions.LocalAddress = localAddess;
-            openOptions.OriginatorUDPPort = 2222; // Support alternate port
+            openOptions.OriginatorUDPPort = 2222; // Support alternate sending port
 
             openOptions.O_T_Assembly.Length = 128;
             openOptions.O_T_Assembly.RealTimeFormat = RealTimeFormat.Header32Bit;
@@ -95,7 +95,8 @@ namespace Giselle.Net.EtherNetIP.Test
         public static UdpClient CreateImplictMessagingClient(ForwardOpenResult openResult)
         {
             var options = openResult.Options;
-            var port = openResult.Options.OriginatorUDPPort;
+            //var port == options.OriginatorUDPPort;
+            var port = 2222; // Receiving port is fixed 2222, in my test
 
             var receiver = new UdpClient();
             receiver.Client.Bind(new IPEndPoint(options.LocalAddress, port));

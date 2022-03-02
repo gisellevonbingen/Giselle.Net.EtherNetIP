@@ -16,7 +16,19 @@ namespace Giselle.Net.EtherNetIP.Test
         {
             using (var tcpClient = new TcpClient())
             {
-                tcpClient.Connect("192.168.1.200", 0xAF12);
+                var tcpRemoteEndPoint = new IPEndPoint(IPAddress.Parse("192.168.1.200"), 0xAF12);
+
+                try
+                {
+                    tcpClient.Connect(tcpRemoteEndPoint);
+                }
+                catch
+                {
+                    Console.WriteLine("ERROR : Can't connect to " + tcpRemoteEndPoint);
+                    Console.WriteLine("Enter to Exit");
+                    Console.ReadLine();
+                    return;
+                }
 
                 var stream = tcpClient.GetStream();
                 var localAddress = ((IPEndPoint)tcpClient.Client.LocalEndPoint).Address;
@@ -26,7 +38,6 @@ namespace Giselle.Net.EtherNetIP.Test
                 try
                 {
                     Identify(stream, codec);
-                    Console.WriteLine();
                     Console.WriteLine("Enter to ForwardOpen");
                     Console.ReadLine();
 
@@ -45,7 +56,6 @@ namespace Giselle.Net.EtherNetIP.Test
                     {
                         StartReceive(openResult, codec, udpClient);
                         StartSend(openResult, codec, udpClient, remoteAddress);
-                        Console.WriteLine();
                         Console.WriteLine("Enter to ForwardClose");
                         Console.ReadLine();
                     }
@@ -73,6 +83,7 @@ namespace Giselle.Net.EtherNetIP.Test
             Console.WriteLine("SerialNumber: " + identifyObject.SerialNumber);
             Console.WriteLine("ProductName: " + identifyObject.ProductName);
             Console.WriteLine("===== End of Identify =====");
+            Console.WriteLine();
         }
 
         public static ForwardOpenResult ForwardOpen(Stream stream, ENIPCodec codec, IPAddress localAddess)

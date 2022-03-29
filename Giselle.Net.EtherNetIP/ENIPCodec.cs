@@ -230,7 +230,7 @@ namespace Giselle.Net.EtherNetIP
                 EndPoint = new IPv4EndPoint() { Family = 2, Port = options.OriginatorUDPPort }
             };
 
-            if (options.O_T_Assembly.ConnectionType == ConnectionType.Multicast)
+            if (options.T_O_Assembly.ConnectionType == ConnectionType.Multicast)
             {
                 requestIPV4EndPoint.EndPoint.Address = ((int)GetMulticastAddress((uint)options.LocalAddress.ToIPv4Address())).ToIPv4Address(true);
             }

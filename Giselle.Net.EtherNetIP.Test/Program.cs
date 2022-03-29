@@ -16,7 +16,7 @@ namespace Giselle.Net.EtherNetIP.Test
         {
             using (var tcpClient = new TcpClient())
             {
-                var tcpRemoteEndPoint = new IPEndPoint(IPAddress.Parse("192.168.1.200"), 0xAF12);
+                var tcpRemoteEndPoint = new IPEndPoint(IPAddress.Parse("192.168.1.149"), 0xAF12);
 
                 try
                 {
@@ -32,7 +32,7 @@ namespace Giselle.Net.EtherNetIP.Test
 
                 var stream = tcpClient.GetStream();
                 var localAddress = ((IPEndPoint)tcpClient.Client.LocalEndPoint).Address;
-                var remoteAddress = ((IPEndPoint)tcpClient.Client.RemoteEndPoint).Address;
+                var remoteEndPoint = (IPEndPoint)tcpClient.Client.RemoteEndPoint;
                 var codec = new ENIPCodec();
 
                 try
@@ -55,7 +55,7 @@ namespace Giselle.Net.EtherNetIP.Test
                     using (var udpClient = CreateImplictMessagingClient(openResult))
                     {
                         StartReceive(openResult, codec, udpClient);
-                        StartSend(openResult, codec, udpClient, remoteAddress);
+                        StartSend(openResult, codec, udpClient, remoteEndPoint);
                         Console.WriteLine("Enter to ForwardClose");
                         Console.ReadLine();
                     }
@@ -148,18 +148,17 @@ namespace Giselle.Net.EtherNetIP.Test
                     }
 
                 }
-                catch
+                catch (Exception e)
                 {
-
+                    Console.WriteLine(e);
                 }
 
             }).Start();
         }
 
-        public static void StartSend(ForwardOpenResult openResult, ENIPCodec codec, UdpClient sender, IPAddress remoteAddress)
+        public static void StartSend(ForwardOpenResult openResult, ENIPCodec codec, UdpClient sender, IPEndPoint remoteEndPoint)
         {
             var options = openResult.Options;
-            var sendAddress = GetTargetEndPoint(openResult, remoteAddress);
             new Thread(() =>
             {
                 try
@@ -190,37 +189,19 @@ namespace Giselle.Net.EtherNetIP.Test
                         {
                             var processor = new ENIPProcessor(ms);
                             items.Write(processor);
-                            sender.Send(ms.ToArray(), (int)ms.Length, sendAddress);
+                            sender.Send(ms.ToArray(), (int)ms.Length, remoteEndPoint);
                             Thread.Sleep((int)(options.O_T_Assembly.RequestPacketRate / 1000U));
                         }
 
                     }
 
                 }
-                catch
+                catch (Exception e)
                 {
-
+                    Console.WriteLine(e);
                 }
 
             }).Start();
-        }
-
-        public static IPEndPoint GetTargetEndPoint(ForwardOpenResult openResult, IPAddress remoteEndPoint)
-        {
-            var options = openResult.Options;
-            var endPoint = new IPEndPoint(remoteEndPoint, options.OriginatorUDPPort);
-
-            if (openResult.O_T_Address != null)
-            {
-                endPoint.Address = openResult.O_T_Address.Address;
-            }
-
-            if (options.T_O_Assembly.ConnectionType == ConnectionType.Multicast)
-            {
-                endPoint.Port = openResult.T_O_Address.Port;
-            }
-
-            return endPoint;
         }
 
     }

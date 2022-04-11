@@ -1,6 +1,8 @@
 # eclipse
 .svn
+.vs
+obj
+bin
 .gradle
 .vs
-bin
-obj
+packages

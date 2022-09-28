@@ -16,7 +16,7 @@ namespace Giselle.Net.EtherNetIP.Test
         {
             using (var tcpClient = new TcpClient())
             {
-                var tcpRemoteEndPoint = new IPEndPoint(IPAddress.Parse("192.168.1.149"), 0xAF12);
+                var tcpRemoteEndPoint = new IPEndPoint(IPAddress.Parse("192.168.1.200"), 0xAF12);
 
                 try
                 {
@@ -32,7 +32,6 @@ namespace Giselle.Net.EtherNetIP.Test
 
                 var stream = tcpClient.GetStream();
                 var localAddress = ((IPEndPoint)tcpClient.Client.LocalEndPoint).Address;
-                var remoteEndPoint = (IPEndPoint)tcpClient.Client.RemoteEndPoint;
                 var codec = new ENIPCodec();
 
                 try
@@ -54,8 +53,9 @@ namespace Giselle.Net.EtherNetIP.Test
 
                     using (var udpClient = CreateImplictMessagingClient(openResult))
                     {
+                        var targetEndPoint = new IPEndPoint(((IPEndPoint)tcpClient.Client.RemoteEndPoint).Address, openResult.Options.T_O_UDPPort);
                         StartReceive(openResult, codec, udpClient);
-                        StartSend(openResult, codec, udpClient, remoteEndPoint);
+                        StartSend(openResult, codec, udpClient, targetEndPoint);
                         Console.WriteLine("Enter to ForwardClose");
                         Console.ReadLine();
                     }
@@ -90,14 +90,14 @@ namespace Giselle.Net.EtherNetIP.Test
         {
             var openOptions = new ForwardOpenOptions();
             openOptions.LocalAddress = localAddess;
-            openOptions.OriginatorUDPPort = 2222; // Support alternate sending port
+            openOptions.T_O_UDPPort = 2222; // Support alternate sending port
 
-            openOptions.O_T_Assembly.Length = 128;
+            openOptions.O_T_Assembly.Length = 64;
             openOptions.O_T_Assembly.RealTimeFormat = RealTimeFormat.Header32Bit;
             openOptions.O_T_Assembly.ConnectionType = ConnectionType.PointToPoint;
             openOptions.O_T_Assembly.RequestPacketRate = 50000; // 50,000 ns = 50 ms;
 
-            openOptions.T_O_Assembly.Length = 128;
+            openOptions.T_O_Assembly.Length = 64;
             openOptions.T_O_Assembly.RealTimeFormat = RealTimeFormat.Modeless;
             openOptions.T_O_Assembly.ConnectionType = ConnectionType.PointToPoint;
             openOptions.T_O_Assembly.RequestPacketRate = 50000; // 50,000 ns = 50 ms;
@@ -158,7 +158,7 @@ namespace Giselle.Net.EtherNetIP.Test
             }).Start();
         }
 
-        public static void StartSend(ForwardOpenResult openResult, ENIPCodec codec, UdpClient sender, IPEndPoint remoteEndPoint)
+        public static void StartSend(ForwardOpenResult openResult, ENIPCodec codec, UdpClient sender, IPEndPoint targetEndPoint)
         {
             var options = openResult.Options;
             new Thread(() =>
@@ -191,7 +191,7 @@ namespace Giselle.Net.EtherNetIP.Test
                         {
                             var processor = new ENIPProcessor(ms);
                             items.Write(processor);
-                            sender.Send(ms.ToArray(), (int)ms.Length, remoteEndPoint);
+                            sender.Send(ms.ToArray(), (int)ms.Length, targetEndPoint);
                             Thread.Sleep((int)(options.O_T_Assembly.RequestPacketRate / 1000U));
                         }
 

@@ -227,7 +227,7 @@ namespace Giselle.Net.EtherNetIP
 
             var requestIPV4EndPoint = new CommandItemEndPoint_T_O
             {
-                EndPoint = new IPv4EndPoint() { Family = 2, Port = options.OriginatorUDPPort }
+                EndPoint = new IPv4EndPoint() { Family = 2, Port = options.T_O_UDPPort }
             };
 
             if (options.T_O_Assembly.ConnectionType == ConnectionType.Multicast)

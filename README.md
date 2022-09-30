@@ -36,3 +36,5 @@ SOFTWARE.
 # Example
 
 [Giselle.Net.EtherNetIP.Test\Program.cs](https://github.com/gisellevonbingen/Giselle.Net.EtherNetIP/blob/main/Giselle.Net.EtherNetIP.Test/Program.cs)
+
+[Giselle.Net.EtherNetIP\ENIPSimpleClient.cs](https://github.com/gisellevonbingen/Giselle.Net.EtherNetIP/blob/main/Giselle.Net.EtherNetIP/ENIPSimpleClient.cs)

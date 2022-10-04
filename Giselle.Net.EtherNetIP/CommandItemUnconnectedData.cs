@@ -9,15 +9,15 @@ namespace Giselle.Net.EtherNetIP
     {
         public byte Command { get; set; }
         public MemoryStream DataStream { get; private set; }
-        public ENIPProcessor DataProcessor { get; private set; }
+        public DataProcessor DataProcessor { get; private set; }
 
         public CommandItemUnconnectedData()
         {
             this.DataStream = new MemoryStream();
-            this.DataProcessor = new ENIPProcessor(this.DataStream);
+            this.DataProcessor = ENIPCodec.CreateDataProcessor(this.DataStream);
         }
 
-        public override void Read(ENIPProcessor processor)
+        public override void Read(DataProcessor processor)
         {
             base.Read(processor);
 
@@ -27,7 +27,7 @@ namespace Giselle.Net.EtherNetIP
             this.DataStream.Position = 0;
         }
 
-        public override void Write(ENIPProcessor processor)
+        public override void Write(DataProcessor processor)
         {
             base.Write(processor);
 
@@ -35,12 +35,12 @@ namespace Giselle.Net.EtherNetIP
             processor.WriteBytes(this.DataStream.ToArray());
         }
 
-        protected virtual void ReadHeader(ENIPProcessor processor)
+        protected virtual void ReadHeader(DataProcessor processor)
         {
             this.Command = processor.ReadByte();
         }
 
-        protected virtual void WriteHeader(ENIPProcessor processor)
+        protected virtual void WriteHeader(DataProcessor processor)
         {
             processor.WriteByte(this.Command);
         }
@@ -56,14 +56,14 @@ namespace Giselle.Net.EtherNetIP
 
         }
 
-        protected override void ReadHeader(ENIPProcessor processor)
+        protected override void ReadHeader(DataProcessor processor)
         {
             base.ReadHeader(processor);
 
             this.Path = processor.ReadRequestPath();
         }
 
-        protected override void WriteHeader(ENIPProcessor processor)
+        protected override void WriteHeader(DataProcessor processor)
         {
             base.WriteHeader(processor);
 
@@ -83,7 +83,7 @@ namespace Giselle.Net.EtherNetIP
             this.ExtendedStatus = new ushort[0];
         }
 
-        protected override void ReadHeader(ENIPProcessor processor)
+        protected override void ReadHeader(DataProcessor processor)
         {
             base.ReadHeader(processor);
 
@@ -99,7 +99,7 @@ namespace Giselle.Net.EtherNetIP
 
         }
 
-        protected override void WriteHeader(ENIPProcessor processor)
+        protected override void WriteHeader(DataProcessor processor)
         {
             base.WriteHeader(processor);
 

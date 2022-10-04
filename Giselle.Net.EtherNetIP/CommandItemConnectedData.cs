@@ -8,15 +8,15 @@ namespace Giselle.Net.EtherNetIP
     public class CommandItemConnectedData : CommandItem
     {
         public MemoryStream DataStream { get; private set; }
-        public ENIPProcessor DataProcessor { get; private set; }
+        public DataProcessor DataProcessor { get; private set; }
 
         public CommandItemConnectedData()
         {
             this.DataStream = new MemoryStream();
-            this.DataProcessor = new ENIPProcessor(this.DataStream);
+            this.DataProcessor = ENIPCodec.CreateDataProcessor(this.DataStream);
         }
 
-        public override void Read(ENIPProcessor processor)
+        public override void Read(DataProcessor processor)
         {
             base.Read(processor);
 
@@ -25,7 +25,7 @@ namespace Giselle.Net.EtherNetIP
             this.DataStream.Position = 0;
         }
 
-        public override void Write(ENIPProcessor processor)
+        public override void Write(DataProcessor processor)
         {
             base.Write(processor);
 

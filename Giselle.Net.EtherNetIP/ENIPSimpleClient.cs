@@ -88,7 +88,7 @@ namespace Giselle.Net.EtherNetIP
             this.TcpStream.DisposeQuietly();
         }
 
-        public ENIPProcessor GetAttribute(RequestPath path)
+        public DataProcessor GetAttribute(RequestPath path)
         {
             this.EnsureConnected();
             return this.Codec.GetAttribute(this.TcpStream, path);
@@ -100,13 +100,13 @@ namespace Giselle.Net.EtherNetIP
             this.Codec.SetAttribute(this.TcpStream, path, bytes);
         }
 
-        public void SetAttribute(RequestPath path, Action<ENIPProcessor> bytesMaker)
+        public void SetAttribute(RequestPath path, Action<DataProcessor> bytesMaker)
         {
             this.EnsureConnected();
 
             using (var ms = new MemoryStream())
             {
-                bytesMaker(new ENIPProcessor(ms));
+                bytesMaker(ENIPCodec.CreateDataProcessor(ms));
                 this.Codec.SetAttribute(this.TcpStream, path, ms.ToArray());
             }
 
@@ -170,7 +170,7 @@ namespace Giselle.Net.EtherNetIP
                     using (var ms = new MemoryStream(bytes))
                     {
                         var items = new CommandItems();
-                        items.Read(new ENIPProcessor(ms), false);
+                        items.Read(ENIPCodec.CreateDataProcessor(ms), false);
 
                         var data = new byte[options.T_O_Assembly.Length];
                         this.Codec.HandleImplicitTransmission(options.T_O_Assembly.RealTimeFormat, items, data);
@@ -213,7 +213,7 @@ namespace Giselle.Net.EtherNetIP
 
                     using (var ms = new MemoryStream())
                     {
-                        items.Write(new ENIPProcessor(ms));
+                        items.Write(ENIPCodec.CreateDataProcessor(ms));
                         udpClient.Send(ms.ToArray(), (int)ms.Length, targetEndPoint);
                     }
 

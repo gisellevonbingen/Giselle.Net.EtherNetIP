@@ -9,7 +9,7 @@ namespace Giselle.Net.EtherNetIP
     {
         public EncapsulationCommand Command { get; set; }
         public MemoryStream DataStream { get; private set; }
-        public ENIPProcessor DataProcessor { get; private set; }
+        public DataProcessor DataProcessor { get; private set; }
         public uint SessionID { get; set; }
         public EncapsulationStatus Status { get; set; }
         public byte[] SenderContext { get; private set; }
@@ -19,14 +19,19 @@ namespace Giselle.Net.EtherNetIP
         {
             this.Command = EncapsulationCommand.NOP;
             this.DataStream = new MemoryStream();
-            this.DataProcessor = new ENIPProcessor(this.DataStream);
+            this.DataProcessor = ENIPCodec.CreateDataProcessor(this.DataStream);
             this.SessionID = 0;
             this.Status = EncapsulationStatus.Success;
             this.SenderContext = new byte[8];
             this.Option = 0;
         }
 
-        public void Read(ENIPProcessor processor)
+        public Encapsulation(DataProcessor processor) : this()
+        {
+            this.Read(processor);
+        }
+
+        public void Read(DataProcessor processor)
         {
             this.Command = (EncapsulationCommand)processor.ReadUShort();
             var bytes = new byte[processor.ReadUShort()];
@@ -41,7 +46,7 @@ namespace Giselle.Net.EtherNetIP
             this.DataStream.Position = 0;
         }
 
-        public void Write(ENIPProcessor processor)
+        public void Write(DataProcessor processor)
         {
             var data = this.DataStream.ToArray();
             processor.WriteUShort((ushort)this.Command);

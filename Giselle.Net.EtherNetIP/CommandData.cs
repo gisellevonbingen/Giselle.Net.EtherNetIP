@@ -19,7 +19,12 @@ namespace Giselle.Net.EtherNetIP
             this.Items = new CommandItems();
         }
 
-        public void Read(ENIPProcessor processor, bool isRequest)
+        public CommandData(DataProcessor processor, bool isRequest) : this()
+        {
+            this.Read(processor, isRequest);
+        }
+
+        public void Read(DataProcessor processor, bool isRequest)
         {
             this.InterfaceHandle = (InterfaceHandle)processor.ReadUInt();
             this.Timeout = processor.ReadUShort();
@@ -27,7 +32,7 @@ namespace Giselle.Net.EtherNetIP
             this.Items.Read(processor, isRequest);
         }
 
-        public void Write(ENIPProcessor processor)
+        public void Write(DataProcessor processor)
         {
             processor.WriteUInt((uint)this.InterfaceHandle);
             processor.WriteUShort(this.Timeout);

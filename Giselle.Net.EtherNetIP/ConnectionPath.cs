@@ -15,7 +15,7 @@ namespace Giselle.Net.EtherNetIP
 
         }
 
-        public void Read(ENIPProcessor processor)
+        public void Read(DataProcessor processor)
         {
             var count = processor.ReadByte();
 
@@ -35,7 +35,7 @@ namespace Giselle.Net.EtherNetIP
 
         }
 
-        public void Write(ENIPProcessor processor)
+        public void Write(DataProcessor processor)
         {
             processor.WriteByte((byte)this.Count);
 

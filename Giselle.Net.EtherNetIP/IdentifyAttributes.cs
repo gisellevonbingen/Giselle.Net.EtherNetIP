@@ -24,12 +24,12 @@ namespace Giselle.Net.EtherNetIP
         public uint SerialNumber { get; set; }
         public string ProductName { get; set; }
 
-        public IdentifyAttributes(ENIPProcessor processor) : this()
+        public IdentifyAttributes(DataProcessor processor) : this()
         {
             this.Read(processor);
         }
 
-        public void Read(ENIPProcessor processor)
+        public void Read(DataProcessor processor)
         {
             this.VenderID = processor.ReadUShort();
             this.DeviceType = processor.ReadUShort();
@@ -42,7 +42,7 @@ namespace Giselle.Net.EtherNetIP
             this.ProductName = Encoding.UTF8.GetString(processor.ReadBytes(produectNameLength));
         }
 
-        public void Write(ENIPProcessor processor)
+        public void Write(DataProcessor processor)
         {
             processor.WriteUShort(this.VenderID);
             processor.WriteUShort(this.DeviceType);

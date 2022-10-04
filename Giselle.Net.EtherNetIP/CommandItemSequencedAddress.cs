@@ -14,7 +14,7 @@ namespace Giselle.Net.EtherNetIP
 
         }
 
-        public override void Read(ENIPProcessor processor)
+        public override void Read(DataProcessor processor)
         {
             base.Read(processor);
 
@@ -22,7 +22,7 @@ namespace Giselle.Net.EtherNetIP
             this.SequenceCount = processor.ReadUInt();
         }
 
-        public override void Write(ENIPProcessor processor)
+        public override void Write(DataProcessor processor)
         {
             base.Write(processor);
 

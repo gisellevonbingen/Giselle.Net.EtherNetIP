@@ -11,6 +11,8 @@ namespace Giselle.Net.EtherNetIP
         public const int ConnectionIDMax = 0xFFFFFFF;
         public const int ConnectionSerialNumberMax = 0xFFFF;
 
+        public static DataProcessor CreateDataProcessor(Stream baseStream) => new DataProcessor(baseStream) { IsLittleEndian = true };
+
         public uint SessionID { get; set; }
         public Random Random { get; set; }
 
@@ -26,7 +28,7 @@ namespace Giselle.Net.EtherNetIP
         {
             using (var ms = new MemoryStream())
             {
-                var processor = new ENIPProcessor(ms);
+                var processor = CreateDataProcessor(ms);
                 processor.WriteEncapsulation(request);
 
                 var bytes = ms.ToArray();
@@ -37,7 +39,7 @@ namespace Giselle.Net.EtherNetIP
 
         public Encapsulation ReadEncapsulation(Stream stream)
         {
-            return new ENIPProcessor(stream).ReadEncapsulation();
+            return CreateDataProcessor(stream).ReadEncapsulation();
         }
 
         public Encapsulation CreateEncapsulation()
@@ -133,13 +135,13 @@ namespace Giselle.Net.EtherNetIP
             return this.CreateSendRRData(udRequest);
         }
 
-        public ENIPProcessor HandleGetAttribute(Encapsulation response)
+        public DataProcessor HandleGetAttribute(Encapsulation response)
         {
             var responseData = response.DataProcessor.ReadCommandData();
             return responseData.Items.Find<CommandItemUnconnectedDataResponse>().DataProcessor;
         }
 
-        public ENIPProcessor GetAttribute(Stream stream, RequestPath path)
+        public DataProcessor GetAttribute(Stream stream, RequestPath path)
         {
             var request = this.CreateGetAttribute(path);
             this.WriteEncapsulation(stream, request);
@@ -158,13 +160,13 @@ namespace Giselle.Net.EtherNetIP
             return this.CreateSendRRData(udRequest);
         }
 
-        public ENIPProcessor HandleSetAttribute(Encapsulation response)
+        public DataProcessor HandleSetAttribute(Encapsulation response)
         {
             var responseData = response.DataProcessor.ReadCommandData();
             return responseData.Items.Find<CommandItemUnconnectedDataResponse>().DataProcessor;
         }
 
-        public ENIPProcessor SetAttribute(Stream stream, RequestPath path, byte[] values)
+        public DataProcessor SetAttribute(Stream stream, RequestPath path, byte[] values)
         {
             var request = this.CreateSetAttribute(path, values);
             this.WriteEncapsulation(stream, request);

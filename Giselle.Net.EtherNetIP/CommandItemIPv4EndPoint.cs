@@ -14,14 +14,14 @@ namespace Giselle.Net.EtherNetIP
             this.EndPoint = new IPv4EndPoint();
         }
 
-        public override void Read(ENIPProcessor processor)
+        public override void Read(DataProcessor processor)
         {
             base.Read(processor);
 
             this.EndPoint.Read(processor.BaseStream);
         }
 
-        public override void Write(ENIPProcessor processor)
+        public override void Write(DataProcessor processor)
         {
             base.Write(processor);
 

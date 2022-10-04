@@ -24,12 +24,12 @@ namespace Giselle.Net.EtherNetIP
 
         public ushort InstanceAttributesMaxID { get; set; }
 
-        public ClassAttributes(ENIPProcessor processor) : this()
+        public ClassAttributes(DataProcessor processor) : this()
         {
             this.Read(processor);
         }
 
-        public void Read(ENIPProcessor processor)
+        public void Read(DataProcessor processor)
         {
             this.Revision = processor.ReadUShort();
             this.MaximumInstance = processor.ReadUShort();
@@ -37,7 +37,7 @@ namespace Giselle.Net.EtherNetIP
             this.InstanceAttributesMaxID = processor.ReadUShort();
         }
 
-        public void Write(ENIPProcessor processor)
+        public void Write(DataProcessor processor)
         {
             processor.WriteUShort(this.Revision);
             processor.WriteUShort(this.MaximumInstance);

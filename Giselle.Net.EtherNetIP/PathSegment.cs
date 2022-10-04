@@ -16,7 +16,7 @@ namespace Giselle.Net.EtherNetIP
             this.ID = id;
         }
 
-        public void Read(ENIPProcessor processor)
+        public void Read(DataProcessor processor)
         {
             var offsetBase = processor.ReadByte();
             var mod = offsetBase % 2;
@@ -33,7 +33,7 @@ namespace Giselle.Net.EtherNetIP
 
         }
 
-        public void Write(ENIPProcessor processor)
+        public void Write(DataProcessor processor)
         {
             var id = this.ID;
             var @base = this.Base;

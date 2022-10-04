@@ -11,12 +11,12 @@ namespace Giselle.Net.EtherNetIP
 
         }
 
-        public virtual void Read(ENIPProcessor processor)
+        public virtual void Read(DataProcessor processor)
         {
 
         }
 
-        public virtual void Write(ENIPProcessor processor)
+        public virtual void Write(DataProcessor processor)
         {
 
         }

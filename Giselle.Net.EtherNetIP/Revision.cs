@@ -19,18 +19,18 @@ namespace Giselle.Net.EtherNetIP
         public byte Major { get; set; }
         public byte Minor { get; set; }
 
-        public Revision(ENIPProcessor processor) : this()
+        public Revision(DataProcessor processor) : this()
         {
             this.Read(processor);
         }
 
-        public void Read(ENIPProcessor processor)
+        public void Read(DataProcessor processor)
         {
             this.Major = processor.ReadByte();
             this.Minor = processor.ReadByte();
         }
 
-        public void Write(ENIPProcessor processor)
+        public void Write(DataProcessor processor)
         {
             processor.WriteByte(this.Major);
             processor.WriteByte(this.Minor);

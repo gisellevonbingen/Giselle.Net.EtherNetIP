@@ -13,12 +13,17 @@ namespace Giselle.Net.EtherNetIP
 
         }
 
+        public CommandItems(DataProcessor processor, bool isRequest) : this()
+        {
+            this.Read(processor, isRequest);
+        }
+
         public T Find<T>() where T : CommandItem
         {
             return this.OfType<T>().FirstOrDefault();
         }
 
-        public virtual void Read(ENIPProcessor processor, bool isRequest)
+        public virtual void Read(DataProcessor processor, bool isRequest)
         {
             this.Clear();
             var itemCount = processor.ReadUShort();
@@ -34,7 +39,7 @@ namespace Giselle.Net.EtherNetIP
                 using (var ms = new MemoryStream(bytes))
                 {
                     var item = registration.SelectType(isRequest).GetConstructor(new Type[0]).Invoke(new object[0]) as CommandItem;
-                    item.Read(new ENIPProcessor(ms));
+                    item.Read(ENIPCodec.CreateDataProcessor(ms));
                     this.Add(item);
                 }
 
@@ -42,7 +47,7 @@ namespace Giselle.Net.EtherNetIP
 
         }
 
-        public virtual void Write(ENIPProcessor processor)
+        public virtual void Write(DataProcessor processor)
         {
             processor.WriteUShort((ushort)this.Count);
 
@@ -52,7 +57,7 @@ namespace Giselle.Net.EtherNetIP
 
                 using (var ms = new MemoryStream())
                 {
-                    item.Write(new ENIPProcessor(ms));
+                    item.Write(ENIPCodec.CreateDataProcessor(ms));
                     processor.WriteUShort(registration.Id);
                     processor.WriteUShort((ushort)ms.Length);
                     processor.WriteBytes(ms.ToArray());

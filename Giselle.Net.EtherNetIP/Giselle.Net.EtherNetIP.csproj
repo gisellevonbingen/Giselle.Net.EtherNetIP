@@ -62,6 +62,7 @@
     <Compile Include="CommonPacketCommand.cs" />
     <Compile Include="ConnectionPath.cs" />
     <Compile Include="DataProcessor.cs" />
+    <Compile Include="DataProcessorExtensions.cs" />
     <Compile Include="ENIPSimpleClient.cs" />
     <Compile Include="IPAddressUtils.cs" />
     <Compile Include="ObjectsExtensions.cs" />
@@ -72,7 +73,6 @@
     <Compile Include="EncapsulationStatus.cs" />
     <Compile Include="ENIPCodec.cs" />
     <Compile Include="ENIPExtensions.cs" />
-    <Compile Include="ENIPProcessor.cs" />
     <Compile Include="ExtendedStatusError.cs" />
     <Compile Include="ForwardCloseOptions.cs" />
     <Compile Include="ForwardCloseResult.cs" />

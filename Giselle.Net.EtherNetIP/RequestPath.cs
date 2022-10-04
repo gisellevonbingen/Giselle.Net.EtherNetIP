@@ -16,15 +16,19 @@ namespace Giselle.Net.EtherNetIP
         public ushort InstanceID { get; set; }
         public ushort AttributeID { get; set; }
 
-        public RequestPath(ushort classID, ushort instanceID, ushort attributeID = 0)
-            : this()
+        public RequestPath(ushort classID, ushort instanceID, ushort attributeID = 0) : this()
         {
             this.ClassID = classID;
             this.InstanceID = instanceID;
             this.AttributeID = attributeID;
         }
 
-        public void Read(ENIPProcessor processor)
+        public RequestPath(DataProcessor processor) : this()
+        {
+            this.Read(processor);
+        }
+
+        public void Read(DataProcessor processor)
         {
             this.ClassID = 0;
             this.InstanceID = 0;
@@ -48,7 +52,7 @@ namespace Giselle.Net.EtherNetIP
 
         }
 
-        public void Write(ENIPProcessor processor)
+        public void Write(DataProcessor processor)
         {
             var tuples = new List<PathSegment>
             {

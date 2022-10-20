@@ -1,10 +1,12 @@
 # Giselle.Net.EtherNetIP
+- Practice repository for test EtherNetIP protocol
+- Capture/Analyze with WireShark
+- Test with ControlTechniques Servo Drives
 
+# Features
 - CIP EtherNet/IP
 - Get/Set assembly data
 - Implicit messaging
-- Practice repository
-- Capture/Analyze with WireShark
 
 # References
 - https://github.com/boundary/wireshark/blob/master/epan/dissectors/packet-enip.c

@@ -44,7 +44,7 @@ namespace Giselle.Net.EtherNetIP.Test
 
                 if (openResult.Error > 0)
                 {
-                    Console.WriteLine("ERROR : " + openResult.Error + ", " + openResult.ExtendedStatus);
+                    Console.WriteLine($"ERROR : {openResult.Error}, {openResult.ExtendedStatus}");
                     Console.WriteLine("Enter to Exit");
                     Console.ReadLine();
                     return;
@@ -61,13 +61,13 @@ namespace Giselle.Net.EtherNetIP.Test
         {
             var identifyObject = client.CreateIdentifyObject();
             Console.WriteLine("===== Start of Identify =====");
-            Console.WriteLine("VenderID: " + identifyObject.VenderID);
-            Console.WriteLine("DeviceType: " + identifyObject.DeviceType);
-            Console.WriteLine("ProductCode: " + identifyObject.ProductCode);
-            Console.WriteLine("Revision: " + identifyObject.Revision);
-            Console.WriteLine("Status: " + identifyObject.Status);
-            Console.WriteLine("SerialNumber: " + identifyObject.SerialNumber);
-            Console.WriteLine("ProductName: " + identifyObject.ProductName);
+            Console.WriteLine($"VenderID: {identifyObject.VenderID}");
+            Console.WriteLine($"DeviceType: {identifyObject.DeviceType}");
+            Console.WriteLine($"ProductCode: {identifyObject.ProductCode}");
+            Console.WriteLine($"Revision: {identifyObject.Revision}");
+            Console.WriteLine($"Status: {identifyObject.Status}");
+            Console.WriteLine($"SerialNumber: {identifyObject.SerialNumber}");
+            Console.WriteLine($"ProductName: {identifyObject.ProductName}");
             Console.WriteLine("===== End of Identify =====");
             Console.WriteLine();
         }

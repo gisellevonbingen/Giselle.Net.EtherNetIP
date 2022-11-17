@@ -60,7 +60,12 @@
     <Compile Include="CommandItems.cs" />
     <Compile Include="CommandItemSequencedAddress.cs" />
     <Compile Include="CommandItemUnconnectedData.cs" />
+    <Compile Include="EPath.cs" />
+    <Compile Include="EPathException.cs" />
+    <Compile Include="EPathSegmentLogical.cs" />
+    <Compile Include="EPathSegmentSymbolicANSI.cs" />
     <Compile Include="IdentifyAttributes.cs" />
+    <Compile Include="IEPathSegment.cs" />
     <Compile Include="KnownAssembyAttributeID.cs" />
     <Compile Include="KnownClassAttributeID.cs" />
     <Compile Include="ServiceCode.cs" />
@@ -68,11 +73,7 @@
     <Compile Include="DataProcessorExtensions.cs" />
     <Compile Include="ENIPSimpleClient.cs" />
     <Compile Include="IPAddressUtils.cs" />
-    <Compile Include="IPathSegment.cs" />
-    <Compile Include="PathSegmentSymbolicANSI.cs" />
-    <Compile Include="PathSegmentException.cs" />
     <Compile Include="ObjectsExtensions.cs" />
-    <Compile Include="PathSegmentLogical.cs" />
     <Compile Include="ConnectionType.cs" />
     <Compile Include="Encapsulation.cs" />
     <Compile Include="EncapsulationCommand.cs" />
@@ -91,7 +92,6 @@
     <Compile Include="Priority.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RealTimeFormat.cs" />
-    <Compile Include="PathSegments.cs" />
     <Compile Include="Revision.cs" />
   </ItemGroup>
   <ItemGroup>

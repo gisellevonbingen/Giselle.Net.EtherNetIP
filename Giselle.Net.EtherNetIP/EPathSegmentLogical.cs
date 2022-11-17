@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Giselle.Net.EtherNetIP
 {
-    public struct PathSegmentLogical : IEquatable<PathSegmentLogical>, IPathSegment
+    public struct EPathSegmentLogical : IEquatable<EPathSegmentLogical>, IEPathSegment
     {
         public const byte RangeStart = 0x20;
         public const byte RangeEnd = 0x3F;
@@ -18,20 +18,20 @@ namespace Giselle.Net.EtherNetIP
 
         public static byte ToTypeBase(byte readingType) => (byte)((readingType + 3) % 4);
 
-        public static PathSegmentLogical FromClassID(uint value) => new PathSegmentLogical(ClassIDBase, value);
+        public static EPathSegmentLogical FromClassID(uint value) => new EPathSegmentLogical(ClassIDBase, value);
 
-        public static PathSegmentLogical FromInstanceID(uint value) => new PathSegmentLogical(InstanceIDBase, value);
+        public static EPathSegmentLogical FromInstanceID(uint value) => new EPathSegmentLogical(InstanceIDBase, value);
 
-        public static PathSegmentLogical FromElementID(uint value) => new PathSegmentLogical(ElementIDBase, value);
+        public static EPathSegmentLogical FromElementID(uint value) => new EPathSegmentLogical(ElementIDBase, value);
 
-        public static PathSegmentLogical FromConnectionPointID(uint value) => new PathSegmentLogical(ConnectionPointIDBase, value);
+        public static EPathSegmentLogical FromConnectionPointID(uint value) => new EPathSegmentLogical(ConnectionPointIDBase, value);
 
-        public static PathSegmentLogical FromAttributeID(uint value) => new PathSegmentLogical(AttributeIDBase, value);
+        public static EPathSegmentLogical FromAttributeID(uint value) => new EPathSegmentLogical(AttributeIDBase, value);
 
         public byte TypeBase { get; set; }
         public uint Value { get; set; }
 
-        public PathSegmentLogical(byte typeBase, uint value = 0)
+        public EPathSegmentLogical(byte typeBase, uint value = 0)
             : this()
         {
             this.TypeBase = typeBase;
@@ -84,7 +84,7 @@ namespace Giselle.Net.EtherNetIP
             }
             else if (mod == 3)
             {
-                throw new PathSegmentException($"Logical Segment Type({readingType}) is not supported");
+                throw new EPathException($"Logical Segment Type({readingType}) is not supported");
             }
 
         }
@@ -113,7 +113,7 @@ namespace Giselle.Net.EtherNetIP
             }
             else if (mod == 3)
             {
-                throw new PathSegmentException($"Logical Segment Type({type}) is not supported");
+                throw new EPathException($"Logical Segment Type({type}) is not supported");
             }
 
         }
@@ -128,10 +128,10 @@ namespace Giselle.Net.EtherNetIP
 
         public override bool Equals(object obj)
         {
-            return obj is PathSegmentLogical other && this.Equals(other);
+            return obj is EPathSegmentLogical other && this.Equals(other);
         }
 
-        public bool Equals(PathSegmentLogical other)
+        public bool Equals(EPathSegmentLogical other)
         {
             if (this.GetType().Equals(other.GetType()) == false)
             {

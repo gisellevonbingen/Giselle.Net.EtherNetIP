@@ -6,19 +6,19 @@ using System.Text;
 
 namespace Giselle.Net.EtherNetIP
 {
-    public class PathSegments : List<IPathSegment>, IEquatable<PathSegments>
+    public class EPath : List<IEPathSegment>, IEquatable<EPath>
     {
-        public static PathSegments FromANSI(string value) => new PathSegments() { PathSegmentSymbolicANSI.FromValue(value) };
+        public static EPath FromANSI(string value) => new EPath() { EPathSegmentSymbolicANSI.FromValue(value) };
 
-        public static IPathSegment CreateSegment(byte type)
+        public static IEPathSegment CreateSegment(byte type)
         {
-            if (type == PathSegmentSymbolicANSI.Base)
+            if (type == EPathSegmentSymbolicANSI.Base)
             {
-                return new PathSegmentSymbolicANSI();
+                return new EPathSegmentSymbolicANSI();
             }
-            else if (PathSegmentLogical.RangeStart <= type && type <= PathSegmentLogical.RangeEnd)
+            else if (EPathSegmentLogical.RangeStart <= type && type <= EPathSegmentLogical.RangeEnd)
             {
-                return new PathSegmentLogical() { TypeBase = PathSegmentLogical.ToTypeBase(type) };
+                return new EPathSegmentLogical() { TypeBase = EPathSegmentLogical.ToTypeBase(type) };
             }
             else
             {
@@ -31,17 +31,17 @@ namespace Giselle.Net.EtherNetIP
 
         public byte Reserved { get; set; }
 
-        public PathSegments()
+        public EPath()
         {
 
         }
 
-        public PathSegments(IEnumerable<IPathSegment> collection) : base(collection)
+        public EPath(IEnumerable<IEPathSegment> collection) : base(collection)
         {
 
         }
 
-        public PathSegments(DataProcessor processor) : this()
+        public EPath(DataProcessor processor) : this()
         {
             this.Read(processor);
         }
@@ -73,7 +73,7 @@ namespace Giselle.Net.EtherNetIP
 
                 if (segmentStream.Position != segmentStream.Length)
                 {
-                    throw new PathSegmentException("PathSegments should read more segments");
+                    throw new EPathException("PathSegments should read more segments");
                 }
 
             }
@@ -96,7 +96,7 @@ namespace Giselle.Net.EtherNetIP
 
                 if (wordBytes.Length % 2 > 0)
                 {
-                    throw new PathSegmentException("PathSegments's bytes was not padded in words");
+                    throw new EPathException("PathSegments's bytes was not padded in words");
                 }
 
                 var wordCount = wordBytes.Length / 2;
@@ -126,10 +126,10 @@ namespace Giselle.Net.EtherNetIP
 
         public override bool Equals(object obj)
         {
-            return obj is PathSegments other && this.Equals(other);
+            return obj is EPath other && this.Equals(other);
         }
 
-        public bool Equals(PathSegments other)
+        public bool Equals(EPath other)
         {
             if (this.GetType().Equals(other.GetType()) == false)
             {

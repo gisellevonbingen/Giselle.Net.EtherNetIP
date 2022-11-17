@@ -132,7 +132,7 @@ namespace Giselle.Net.EtherNetIP
         {
             var udRequest = new CommandItemUnconnectedDataRequest();
             udRequest.ServiceCode = path.AttributeID == 0 ? ServiceCode.GetAttributeAll : ServiceCode.GetAttributeSingle;
-            udRequest.Path = new PathSegments(path.AsRequestPathSegments());
+            udRequest.Path = path.AsEPath();
 
             return this.CreateSendRRData(udRequest);
         }
@@ -156,7 +156,7 @@ namespace Giselle.Net.EtherNetIP
         {
             var udRequest = new CommandItemUnconnectedDataRequest();
             udRequest.ServiceCode = ServiceCode.SetAttributeSingle;
-            udRequest.Path = new PathSegments(path.AsRequestPathSegments());
+            udRequest.Path = path.AsEPath();
             udRequest.DataProcessor.WriteBytes(values);
 
             return this.CreateSendRRData(udRequest);
@@ -181,10 +181,10 @@ namespace Giselle.Net.EtherNetIP
         {
             var udRequest = new CommandItemUnconnectedDataRequest();
             udRequest.ServiceCode = ServiceCode.ForwardOpen;
-            udRequest.Path = new PathSegments()
+            udRequest.Path = new EPath()
             {
-                PathSegmentLogical.FromClassID(KnownClassID.ConnectionManager),
-                PathSegmentLogical.FromInstanceID(0x01)
+                EPathSegmentLogical.FromClassID(KnownClassID.ConnectionManager),
+                EPathSegmentLogical.FromInstanceID(0x01)
             };
 
             var reqProcessor = udRequest.DataProcessor;
@@ -215,20 +215,20 @@ namespace Giselle.Net.EtherNetIP
             // Transport Type/Trigger
             reqProcessor.WriteByte(0x01);
 
-            var connectionPath = new PathSegments
+            var connectionPath = new EPath
             {
-                PathSegmentLogical.FromClassID(options.ClassID),
-                PathSegmentLogical.FromInstanceID(0x01)
+                EPathSegmentLogical.FromClassID(options.ClassID),
+                EPathSegmentLogical.FromInstanceID(0x01)
             };
 
             if (options.O_T_Assembly.ConnectionType != ConnectionType.Null)
             {
-                connectionPath.Add(PathSegmentLogical.FromConnectionPointID(options.O_T_Assembly.InstanceID));
+                connectionPath.Add(EPathSegmentLogical.FromConnectionPointID(options.O_T_Assembly.InstanceID));
             }
 
             if (options.T_O_Assembly.ConnectionType != ConnectionType.Null)
             {
-                connectionPath.Add(PathSegmentLogical.FromConnectionPointID(options.T_O_Assembly.InstanceID));
+                connectionPath.Add(EPathSegmentLogical.FromConnectionPointID(options.T_O_Assembly.InstanceID));
             }
 
             connectionPath.Write(reqProcessor);
@@ -299,10 +299,10 @@ namespace Giselle.Net.EtherNetIP
         {
             var udRequest = new CommandItemUnconnectedDataRequest();
             udRequest.ServiceCode = ServiceCode.ForwardClose;
-            udRequest.Path = new PathSegments()
+            udRequest.Path = new EPath()
             {
-                PathSegmentLogical.FromClassID(KnownClassID.ConnectionManager),
-                PathSegmentLogical.FromInstanceID(0x01)
+                EPathSegmentLogical.FromClassID(KnownClassID.ConnectionManager),
+                EPathSegmentLogical.FromInstanceID(0x01)
             };
 
             var reqProcessor = udRequest.DataProcessor;
@@ -313,21 +313,21 @@ namespace Giselle.Net.EtherNetIP
             reqProcessor.WriteUShort(options.OriginatorVenderID);
             reqProcessor.WriteUInt(options.OriginatorSerialNumber);
 
-            var connectionPath = new PathSegments
+            var connectionPath = new EPath
             {
-               PathSegmentLogical.FromClassID(options.ClassID),
-               PathSegmentLogical.FromInstanceID(0x01),
+               EPathSegmentLogical.FromClassID(options.ClassID),
+               EPathSegmentLogical.FromInstanceID(0x01),
             };
             connectionPath.HasReserved = true;
 
             if (options.O_T_ConnectionType != ConnectionType.Null)
             {
-                connectionPath.Add(PathSegmentLogical.FromConnectionPointID(options.O_T_InstanceID));
+                connectionPath.Add(EPathSegmentLogical.FromConnectionPointID(options.O_T_InstanceID));
             }
 
             if (options.T_O_ConnectionType != ConnectionType.Null)
             {
-                connectionPath.Add(PathSegmentLogical.FromConnectionPointID(options.T_O_InstanceID));
+                connectionPath.Add(EPathSegmentLogical.FromConnectionPointID(options.T_O_InstanceID));
             }
 
             connectionPath.Write(reqProcessor);

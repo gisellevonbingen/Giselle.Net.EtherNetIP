@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Giselle.Net.EtherNetIP
 {
-    public interface IPathSegment
+    public interface IEPathSegment
     {
         byte Type { get; }
 

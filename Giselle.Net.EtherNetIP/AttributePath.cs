@@ -18,14 +18,16 @@ namespace Giselle.Net.EtherNetIP
             this.AttributeID = attributeId;
         }
 
-        public IEnumerable<IPathSegment> AsRequestPathSegments()
+        public EPath AsEPath() => new EPath(this.AsEPathSegments());
+
+        public IEnumerable<IEPathSegment> AsEPathSegments()
         {
-            yield return PathSegmentLogical.FromClassID(this.ClassID);
-            yield return PathSegmentLogical.FromInstanceID(this.InstanceID);
+            yield return EPathSegmentLogical.FromClassID(this.ClassID);
+            yield return EPathSegmentLogical.FromInstanceID(this.InstanceID);
 
             if (this.AttributeID > 0)
             {
-                yield return PathSegmentLogical.FromAttributeID(this.AttributeID);
+                yield return EPathSegmentLogical.FromAttributeID(this.AttributeID);
             }
 
         }

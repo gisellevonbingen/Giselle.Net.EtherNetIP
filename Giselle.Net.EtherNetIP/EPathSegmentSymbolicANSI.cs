@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace Giselle.Net.EtherNetIP
 {
-    public struct PathSegmentSymbolicANSI : IEquatable<PathSegmentSymbolicANSI>, IPathSegment
+    public struct EPathSegmentSymbolicANSI : IEquatable<EPathSegmentSymbolicANSI>, IEPathSegment
     {
         public const byte Base = 0x91;
         public static Encoding Encoding => Encoding.ASCII;
 
-        public static PathSegmentSymbolicANSI FromValue(string value) => new PathSegmentSymbolicANSI(value);
+        public static EPathSegmentSymbolicANSI FromValue(string value) => new EPathSegmentSymbolicANSI(value);
 
         public string Value { get; set; }
 
         public byte Type => Base;
 
-        public PathSegmentSymbolicANSI(string value) : this()
+        public EPathSegmentSymbolicANSI(string value) : this()
         {
             this.Value = value;
         }
@@ -46,10 +46,10 @@ namespace Giselle.Net.EtherNetIP
 
         public override bool Equals(object obj)
         {
-            return obj is PathSegmentSymbolicANSI other && this.Equals(other);
+            return obj is EPathSegmentSymbolicANSI other && this.Equals(other);
         }
 
-        public bool Equals(PathSegmentSymbolicANSI other)
+        public bool Equals(EPathSegmentSymbolicANSI other)
         {
             if (this.GetType().Equals(other.GetType()) == false)
             {

@@ -49,7 +49,7 @@ namespace Giselle.Net.EtherNetIP
 
     public class CommandItemUnconnectedDataRequest : CommandItemUnconnectedData
     {
-        public PathSegments Path { get; set; } = new PathSegments();
+        public EPath Path { get; set; } = new EPath();
 
         public CommandItemUnconnectedDataRequest()
         {
@@ -60,14 +60,14 @@ namespace Giselle.Net.EtherNetIP
         {
             base.ReadHeader(processor);
 
-            this.Path = processor.ReadPathSegments();
+            this.Path = processor.ReadEPath();
         }
 
         protected override void WriteHeader(DataProcessor processor)
         {
             base.WriteHeader(processor);
 
-            processor.WritePathSegments(this.Path);
+            processor.WriteEPath(this.Path);
         }
 
     }

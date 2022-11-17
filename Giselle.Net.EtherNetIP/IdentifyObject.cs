@@ -16,7 +16,7 @@ namespace Giselle.Net.EtherNetIP
             this.BaseStream = stream;
         }
 
-        public DataProcessor Read(ushort attributeID = 0)
+        public DataProcessor Read(uint attributeID = 0)
         {
             return this.Parent.GetAttribute(this.BaseStream, new AttributePath(KnownClassID.Identify, 1, attributeID));
         }

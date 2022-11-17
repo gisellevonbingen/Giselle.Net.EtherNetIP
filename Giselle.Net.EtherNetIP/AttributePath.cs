@@ -7,15 +7,15 @@ namespace Giselle.Net.EtherNetIP
 {
     public struct AttributePath : IEquatable<AttributePath>
     {
-        public ushort ClassID { get; set; }
-        public ushort InstanceID { get; set; }
-        public ushort AttributeID { get; set; }
+        public uint ClassID { get; set; }
+        public uint InstanceID { get; set; }
+        public uint AttributeID { get; set; }
 
-        public AttributePath(ushort classID, ushort instanceID, ushort attributeID = 0) : this()
+        public AttributePath(uint classId, uint instanceId, uint attributeId = 0) : this()
         {
-            this.ClassID = classID;
-            this.InstanceID = instanceID;
-            this.AttributeID = attributeID;
+            this.ClassID = classId;
+            this.InstanceID = instanceId;
+            this.AttributeID = attributeId;
         }
 
         public IEnumerable<IPathSegment> AsRequestPathSegments()

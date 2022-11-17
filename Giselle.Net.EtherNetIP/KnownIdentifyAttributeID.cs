@@ -6,25 +6,25 @@ namespace Giselle.Net.EtherNetIP
 {
     public static class KnownIdentifyAttributeID
     {
-        public const ushort VenderID = 1;
-        public const ushort DeviceType = 2;
-        public const ushort ProductCode = 3;
-        public const ushort Revision = 4;
-        public const ushort Status = 5;
-        public const ushort SerialNumber = 6;
-        public const ushort ProductName = 7;
+        public const uint VenderID = 1;
+        public const uint DeviceType = 2;
+        public const uint ProductCode = 3;
+        public const uint Revision = 4;
+        public const uint Status = 5;
+        public const uint SerialNumber = 6;
+        public const uint ProductName = 7;
         /// <summary>
         /// Optional
         /// </summary>
-        public const ushort State = 8;
+        public const uint State = 8;
         /// <summary>
         /// Optional
         /// </summary>
-        public const ushort ConfigurationConsistencyValue = 9;
+        public const uint ConfigurationConsistencyValue = 9;
         /// <summary>
         /// Optional
         /// </summary>
-        public const ushort HeartbeatInterval = 10;
+        public const uint HeartbeatInterval = 10;
     }
 
 }

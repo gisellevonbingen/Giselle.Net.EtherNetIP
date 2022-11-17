@@ -20,7 +20,7 @@ namespace Giselle.Net.EtherNetIP
         /// </summary>
         public byte TimeoutMultiplier { get; set; }
 
-        public ushort ClassID { get; set; }
+        public uint ClassID { get; set; }
 
         public AbstractOptions()
         {

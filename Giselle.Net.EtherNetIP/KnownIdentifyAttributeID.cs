@@ -13,18 +13,6 @@ namespace Giselle.Net.EtherNetIP
         public const uint Status = 5;
         public const uint SerialNumber = 6;
         public const uint ProductName = 7;
-        /// <summary>
-        /// Optional
-        /// </summary>
-        public const uint State = 8;
-        /// <summary>
-        /// Optional
-        /// </summary>
-        public const uint ConfigurationConsistencyValue = 9;
-        /// <summary>
-        /// Optional
-        /// </summary>
-        public const uint HeartbeatInterval = 10;
     }
 
 }

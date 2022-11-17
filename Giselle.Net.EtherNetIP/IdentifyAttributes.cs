@@ -46,23 +46,7 @@ namespace Giselle.Net.EtherNetIP
 
         }
 
-        /// <summary>
-        /// Optional
-        /// </summary>
-        public IdentifyState State => (IdentifyState)this.Read(KnownIdentifyAttributeID.SerialNumber).ReadByte();
-
-        /// <summary>
-        /// Optional
-        /// </summary>
-        public ushort ConfigurationConsistencyValue => this.Read(KnownIdentifyAttributeID.ConfigurationConsistencyValue).ReadUShort();
-
-        /// <summary>
-        /// Optional
-        /// </summary>
-        public byte HeartbeatInterval => this.Read(KnownIdentifyAttributeID.HeartbeatInterval).ReadByte();
-
         public ClassAttributes ClassAttributes => this.Parent.GetClassAttributes(this.BaseStream, ClassID);
-
     }
 
 }

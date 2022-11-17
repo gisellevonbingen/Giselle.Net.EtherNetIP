@@ -18,7 +18,7 @@ namespace Giselle.Net.EtherNetIP.Test
             {
                 try
                 {
-                    Console.WriteLine("Conncecting");
+                    Console.WriteLine("Connecting");
                     client.Connect(IPAddress.Parse("192.168.1.200"));
                     Console.WriteLine("Connected");
                 }

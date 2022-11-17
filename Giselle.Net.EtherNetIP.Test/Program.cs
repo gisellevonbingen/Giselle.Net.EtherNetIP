@@ -59,16 +59,27 @@ namespace Giselle.Net.EtherNetIP.Test
 
         public static void Identify(ENIPSimpleClient client)
         {
-            var identifyObject = client.CreateIdentifyObject();
-            Console.WriteLine("===== Start of Identify =====");
-            Console.WriteLine($"VenderID: {identifyObject.VenderID}");
-            Console.WriteLine($"DeviceType: {identifyObject.DeviceType}");
-            Console.WriteLine($"ProductCode: {identifyObject.ProductCode}");
-            Console.WriteLine($"Revision: {identifyObject.Revision}");
-            Console.WriteLine($"Status: {identifyObject.Status}");
-            Console.WriteLine($"SerialNumber: {identifyObject.SerialNumber}");
-            Console.WriteLine($"ProductName: {identifyObject.ProductName}");
-            Console.WriteLine("===== End of Identify =====");
+            var identifyAttributes = client.GetIdentifyAttributes();
+            var identifyClassAttributes = identifyAttributes.ClassAttributes;
+
+            Console.WriteLine("===== Start of Identify Class Attributes =====");
+            Console.WriteLine($"Revision: {identifyClassAttributes.Revision}");
+            Console.WriteLine($"InstanceMaxID: {identifyClassAttributes.InstanceMaxID}");
+            Console.WriteLine($"InstanceCount: {identifyClassAttributes.InstanceCount}");
+            Console.WriteLine($"ClassAttributesMaxID: {identifyClassAttributes.ClassAttributesMaxID}");
+            Console.WriteLine($"InstanceAttributesMaxID: {identifyClassAttributes.InstanceAttributesMaxID}");
+            Console.WriteLine("===== End of Identify Class Attributes =====");
+            Console.WriteLine();
+
+            Console.WriteLine("===== Start of Identify Attributes =====");
+            Console.WriteLine($"VenderID: {identifyAttributes.VenderID}");
+            Console.WriteLine($"DeviceType: {identifyAttributes.DeviceType}");
+            Console.WriteLine($"ProductCode: {identifyAttributes.ProductCode}");
+            Console.WriteLine($"Revision: {identifyAttributes.Revision}");
+            Console.WriteLine($"Status: {identifyAttributes.Status}");
+            Console.WriteLine($"SerialNumber: {identifyAttributes.SerialNumber}");
+            Console.WriteLine($"ProductName: {identifyAttributes.ProductName}");
+            Console.WriteLine("===== End of Identify Attributes =====");
             Console.WriteLine();
         }
 

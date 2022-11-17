@@ -60,6 +60,8 @@
     <Compile Include="CommandItems.cs" />
     <Compile Include="CommandItemSequencedAddress.cs" />
     <Compile Include="CommandItemUnconnectedData.cs" />
+    <Compile Include="IdentifyAttributes.cs" />
+    <Compile Include="KnownClassAttributeID.cs" />
     <Compile Include="ServiceCode.cs" />
     <Compile Include="DataProcessor.cs" />
     <Compile Include="DataProcessorExtensions.cs" />
@@ -81,8 +83,6 @@
     <Compile Include="ForwardCloseResult.cs" />
     <Compile Include="ForwardOpenOptions.cs" />
     <Compile Include="ForwardOpenResult.cs" />
-    <Compile Include="IdentifyAttributes.cs" />
-    <Compile Include="IdentifyObject.cs" />
     <Compile Include="IdentifyState.cs" />
     <Compile Include="InterfaceHandle.cs" />
     <Compile Include="IPv4EndPoint.cs" />

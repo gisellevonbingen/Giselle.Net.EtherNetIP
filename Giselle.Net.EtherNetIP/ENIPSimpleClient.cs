@@ -44,10 +44,16 @@ namespace Giselle.Net.EtherNetIP
             this.TcpClient = new TcpClient();
         }
 
-        public IdentifyObject CreateIdentifyObject()
+        public IdentifyAttributes GetIdentifyAttributes()
         {
             this.EnsureConnected();
-            return this.Codec.CreateIdentifyObject(this.TcpStream);
+            return this.Codec.GetIdentifyAttributes(this.TcpStream);
+        }
+
+        public ClassAttributes GetIdentifyAttributes(uint classId)
+        {
+            this.EnsureConnected();
+            return this.Codec.GetClassAttributes(this.TcpStream, classId);
         }
 
         public void EnsureConnected()

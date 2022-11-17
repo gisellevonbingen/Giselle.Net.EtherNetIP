@@ -22,7 +22,9 @@ namespace Giselle.Net.EtherNetIP
             this.Random = new Random();
         }
 
-        public IdentifyObject CreateIdentifyObject(Stream stream) { return new IdentifyObject(this, stream); }
+        public IdentifyAttributes GetIdentifyAttributes(Stream stream) => new IdentifyAttributes(this, stream);
+
+        public ClassAttributes GetClassAttributes(Stream stream, uint classId) => new ClassAttributes(this, stream, classId);
 
         public void WriteEncapsulation(Stream stream, Encapsulation request)
         {

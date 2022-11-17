@@ -1,94 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace Giselle.Net.EtherNetIP
 {
-    public struct ClassAttributes : IEquatable<ClassAttributes>
+    public class ClassAttributes
     {
-        public static bool operator ==(ClassAttributes a, ClassAttributes b)
+        public ENIPCodec Parent { get; private set; }
+        public Stream BaseStream { get; private set; }
+        public uint ClassId { get; }
+
+        public ClassAttributes(ENIPCodec parent, Stream stream, uint classId)
         {
-            return a.Equals(b) == true;
+            this.Parent = parent;
+            this.BaseStream = stream;
+            this.ClassId = classId;
         }
 
-        public static bool operator !=(ClassAttributes a, ClassAttributes b)
+        public DataProcessor Read(uint attributeID = 0)
         {
-            return a.Equals(b) == false;
+            return this.Parent.GetAttribute(this.BaseStream, new AttributePath(this.ClassId, 0, attributeID));
         }
 
-        public ushort Revision { get; set; }
+        public ushort Revision => this.Read(KnownClassAttributeID.Revision).ReadUShort();
 
-        public ushort MaximumInstance { get; set; }
+        public ushort InstanceMaxID => this.Read(KnownClassAttributeID.InstanceMaxID).ReadUShort();
 
-        public ushort ClassAttributesMaxID { get; set; }
+        public ushort InstanceCount => this.Read(KnownClassAttributeID.InstanceCount).ReadUShort();
 
-        public ushort InstanceAttributesMaxID { get; set; }
+        public ushort ClassAttributesMaxID => this.Read(KnownClassAttributeID.ClassAttributesMaxID).ReadUShort();
 
-        public ClassAttributes(DataProcessor processor) : this()
-        {
-            this.Read(processor);
-        }
-
-        public void Read(DataProcessor processor)
-        {
-            this.Revision = processor.ReadUShort();
-            this.MaximumInstance = processor.ReadUShort();
-            this.ClassAttributesMaxID = processor.ReadUShort();
-            this.InstanceAttributesMaxID = processor.ReadUShort();
-        }
-
-        public void Write(DataProcessor processor)
-        {
-            processor.WriteUShort(this.Revision);
-            processor.WriteUShort(this.MaximumInstance);
-            processor.WriteUShort(this.ClassAttributesMaxID);
-            processor.WriteUShort(this.InstanceAttributesMaxID);
-        }
-
-        public override int GetHashCode()
-        {
-            var hash = 17;
-            hash = hash * 31 + this.Revision.GetHashCode();
-            hash = hash * 31 + this.MaximumInstance.GetHashCode();
-            hash = hash * 31 + this.ClassAttributesMaxID.GetHashCode();
-            hash = hash * 31 + this.InstanceAttributesMaxID.GetHashCode();
-            return hash;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is ClassAttributes other && this.Equals(other);
-        }
-
-        public bool Equals(ClassAttributes other)
-        {
-            if (this.GetType().Equals(other.GetType()) == false)
-            {
-                return false;
-            }
-
-            if (this.Revision != other.Revision)
-            {
-                return false;
-            }
-
-            if (this.MaximumInstance != other.MaximumInstance)
-            {
-                return false;
-            }
-
-            if (this.ClassAttributesMaxID != other.ClassAttributesMaxID)
-            {
-                return false;
-            }
-
-            if (this.InstanceAttributesMaxID != other.InstanceAttributesMaxID)
-            {
-                return false;
-            }
-
-            return true;
-        }
+        public ushort InstanceAttributesMaxID => this.Read(KnownClassAttributeID.InstanceAttributesMaxID).ReadUShort();
 
     }
 

@@ -60,7 +60,7 @@
     <Compile Include="CommandItems.cs" />
     <Compile Include="CommandItemSequencedAddress.cs" />
     <Compile Include="CommandItemUnconnectedData.cs" />
-    <Compile Include="CommonPacketCommand.cs" />
+    <Compile Include="ServiceCode.cs" />
     <Compile Include="DataProcessor.cs" />
     <Compile Include="DataProcessorExtensions.cs" />
     <Compile Include="ENIPSimpleClient.cs" />

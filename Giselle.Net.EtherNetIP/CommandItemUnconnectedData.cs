@@ -7,7 +7,7 @@ namespace Giselle.Net.EtherNetIP
 {
     public abstract class CommandItemUnconnectedData : CommandItem
     {
-        public byte Command { get; set; }
+        public ServiceCode ServiceCode { get; set; }
         public MemoryStream DataStream { get; private set; }
         public DataProcessor DataProcessor { get; private set; }
 
@@ -37,12 +37,12 @@ namespace Giselle.Net.EtherNetIP
 
         protected virtual void ReadHeader(DataProcessor processor)
         {
-            this.Command = processor.ReadByte();
+            this.ServiceCode = (ServiceCode)processor.ReadByte();
         }
 
         protected virtual void WriteHeader(DataProcessor processor)
         {
-            processor.WriteByte(this.Command);
+            processor.WriteByte((byte)this.ServiceCode);
         }
 
     }

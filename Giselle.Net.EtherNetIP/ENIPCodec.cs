@@ -129,7 +129,7 @@ namespace Giselle.Net.EtherNetIP
         public Encapsulation CreateGetAttribute(AttributePath path)
         {
             var udRequest = new CommandItemUnconnectedDataRequest();
-            udRequest.Command = (byte)(path.AttributeID == 0 ? CommonPacketCommand.GetAttributeAll : CommonPacketCommand.GetAttributeSingle);
+            udRequest.ServiceCode = path.AttributeID == 0 ? ServiceCode.GetAttributeAll : ServiceCode.GetAttributeSingle;
             udRequest.Path = new PathSegments(path.AsRequestPathSegments());
 
             return this.CreateSendRRData(udRequest);
@@ -153,7 +153,7 @@ namespace Giselle.Net.EtherNetIP
         public Encapsulation CreateSetAttribute(AttributePath path, byte[] values)
         {
             var udRequest = new CommandItemUnconnectedDataRequest();
-            udRequest.Command = (byte)CommonPacketCommand.SetAttribute;
+            udRequest.ServiceCode = ServiceCode.SetAttributeSingle;
             udRequest.Path = new PathSegments(path.AsRequestPathSegments());
             udRequest.DataProcessor.WriteBytes(values);
 
@@ -178,7 +178,7 @@ namespace Giselle.Net.EtherNetIP
         public Encapsulation CreateForwardOpen(ForwardOpenOptions options)
         {
             var udRequest = new CommandItemUnconnectedDataRequest();
-            udRequest.Command = (byte)CommonPacketCommand.ForwardOpen;
+            udRequest.ServiceCode = ServiceCode.ForwardOpen;
             udRequest.Path = new PathSegments()
             {
                 PathSegmentLogical.FromClassID(KnownClassID.ConnectionManager),
@@ -296,7 +296,7 @@ namespace Giselle.Net.EtherNetIP
         public Encapsulation CreateForwardClose(ForwardCloseOptions options)
         {
             var udRequest = new CommandItemUnconnectedDataRequest();
-            udRequest.Command = (byte)CommonPacketCommand.ForwardClose;
+            udRequest.ServiceCode = ServiceCode.ForwardClose;
             udRequest.Path = new PathSegments()
             {
                 PathSegmentLogical.FromClassID(KnownClassID.ConnectionManager),

@@ -86,7 +86,6 @@
     <Compile Include="IdentifyState.cs" />
     <Compile Include="InterfaceHandle.cs" />
     <Compile Include="IPv4EndPoint.cs" />
-    <Compile Include="KnownAssemblyInstanceID.cs" />
     <Compile Include="KnownClassID.cs" />
     <Compile Include="KnownIdentifyAttributeID.cs" />
     <Compile Include="Priority.cs" />

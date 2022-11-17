@@ -21,8 +21,8 @@ namespace Giselle.Net.EtherNetIP
 
         public ForwardOpenOptions()
         {
-            this.O_T_Assembly = new AssemblyObject() { InstanceID = KnownAssemblyInstanceID.PrimaryOutput };
-            this.T_O_Assembly = new AssemblyObject() { InstanceID = KnownAssemblyInstanceID.PrimaryInput };
+            this.O_T_Assembly = new AssemblyObject();
+            this.T_O_Assembly = new AssemblyObject();
 
             this.T_O_UDPPort = 2222;
             this.LocalAddress = IPAddress.Loopback;

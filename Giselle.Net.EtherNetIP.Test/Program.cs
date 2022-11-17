@@ -77,11 +77,13 @@ namespace Giselle.Net.EtherNetIP.Test
             var openOptions = new ForwardOpenOptions();
             openOptions.T_O_UDPPort = 2222; // Support alternate sending port
 
+            openOptions.O_T_Assembly.InstanceID = 101;
             openOptions.O_T_Assembly.Length = 64;
             openOptions.O_T_Assembly.RealTimeFormat = RealTimeFormat.Header32Bit;
             openOptions.O_T_Assembly.ConnectionType = ConnectionType.PointToPoint;
             openOptions.O_T_Assembly.RequestPacketRate = 50000; // 50,000 ns = 50 ms;
 
+            openOptions.T_O_Assembly.InstanceID = 100;
             openOptions.T_O_Assembly.Length = 64;
             openOptions.T_O_Assembly.RealTimeFormat = RealTimeFormat.Modeless;
             openOptions.T_O_Assembly.ConnectionType = ConnectionType.PointToPoint;

@@ -15,10 +15,7 @@ namespace Giselle.Net.EtherNetIP
         public ForwardCloseOptions()
         {
             this.O_T_ConnectionType = ConnectionType.Null;
-            this.O_T_InstanceID = KnownAssemblyInstanceID.PrimaryOutput;
-
             this.T_O_ConnectionType = ConnectionType.Null;
-            this.T_O_InstanceID = KnownAssemblyInstanceID.PrimaryInput;
         }
 
         public ForwardCloseOptions(ForwardCloseOptions other)

@@ -186,7 +186,7 @@ namespace Giselle.Net.EtherNetIP
 
         }
 
-        public virtual byte[] ReadBytes(int length)
+        public virtual byte[] ReadBytes(long length)
         {
             var bytes = new byte[length];
             this.ReadBytes(bytes);

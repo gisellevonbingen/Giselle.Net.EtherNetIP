@@ -18,7 +18,7 @@ namespace Giselle.Net.EtherNetIP
 
         public DataProcessor Read(ushort attributeID = 0)
         {
-            return this.Parent.GetAttribute(this.BaseStream, new RequestPath(KnownClassID.Identify, 1, attributeID));
+            return this.Parent.GetAttribute(this.BaseStream, new AttributePath(KnownClassID.Identify, 1, attributeID));
         }
 
         public ushort VenderID { get { return this.Read(KnownIdentifyAttributeID.VenderID).ReadUShort(); } }
@@ -59,7 +59,7 @@ namespace Giselle.Net.EtherNetIP
         /// </summary>
         public byte HeartbeatInterval { get { return this.Read(KnownIdentifyAttributeID.HeartbeatInterval).ReadByte(); } }
 
-        public ClassAttributes ClassAttributes { get { return new ClassAttributes(this.Parent.GetAttribute(this.BaseStream, new RequestPath(KnownClassID.Identify, 0))); } }
+        public ClassAttributes ClassAttributes { get { return new ClassAttributes(this.Parent.GetAttribute(this.BaseStream, new AttributePath(KnownClassID.Identify, 0))); } }
 
         public IdentifyAttributes IdentifyAttributes { get { return new IdentifyAttributes(this.Read()); } }
 

@@ -126,11 +126,11 @@ namespace Giselle.Net.EtherNetIP
             this.HandleUnRegisterSession();
         }
 
-        public Encapsulation CreateGetAttribute(RequestPath path)
+        public Encapsulation CreateGetAttribute(AttributePath path)
         {
             var udRequest = new CommandItemUnconnectedDataRequest();
             udRequest.Command = (byte)(path.AttributeID == 0 ? CommonPacketCommand.GetAttributeAll : CommonPacketCommand.GetAttributeSingle);
-            udRequest.Path = path;
+            udRequest.Path = new PathSegments(path.AsRequestPathSegments());
 
             return this.CreateSendRRData(udRequest);
         }
@@ -141,7 +141,7 @@ namespace Giselle.Net.EtherNetIP
             return responseData.Items.Find<CommandItemUnconnectedDataResponse>().DataProcessor;
         }
 
-        public DataProcessor GetAttribute(Stream stream, RequestPath path)
+        public DataProcessor GetAttribute(Stream stream, AttributePath path)
         {
             var request = this.CreateGetAttribute(path);
             this.WriteEncapsulation(stream, request);
@@ -150,11 +150,11 @@ namespace Giselle.Net.EtherNetIP
             return this.HandleGetAttribute(response);
         }
 
-        public Encapsulation CreateSetAttribute(RequestPath path, byte[] values)
+        public Encapsulation CreateSetAttribute(AttributePath path, byte[] values)
         {
             var udRequest = new CommandItemUnconnectedDataRequest();
             udRequest.Command = (byte)CommonPacketCommand.SetAttribute;
-            udRequest.Path = path;
+            udRequest.Path = new PathSegments(path.AsRequestPathSegments());
             udRequest.DataProcessor.WriteBytes(values);
 
             return this.CreateSendRRData(udRequest);
@@ -166,7 +166,7 @@ namespace Giselle.Net.EtherNetIP
             return responseData.Items.Find<CommandItemUnconnectedDataResponse>().DataProcessor;
         }
 
-        public DataProcessor SetAttribute(Stream stream, RequestPath path, byte[] values)
+        public DataProcessor SetAttribute(Stream stream, AttributePath path, byte[] values)
         {
             var request = this.CreateSetAttribute(path, values);
             this.WriteEncapsulation(stream, request);
@@ -179,7 +179,11 @@ namespace Giselle.Net.EtherNetIP
         {
             var udRequest = new CommandItemUnconnectedDataRequest();
             udRequest.Command = (byte)CommonPacketCommand.ForwardOpen;
-            udRequest.Path = new RequestPath(KnownClassID.ConnectionManager, 0x01);
+            udRequest.Path = new PathSegments()
+            {
+                PathSegmentLogical.FromClassID(KnownClassID.ConnectionManager),
+                PathSegmentLogical.FromInstanceID(0x01)
+            };
 
             var reqProcessor = udRequest.DataProcessor;
             reqProcessor.WriteByte(options.TickTime);
@@ -209,23 +213,23 @@ namespace Giselle.Net.EtherNetIP
             // Transport Type/Trigger
             reqProcessor.WriteByte(0x01);
 
-            var pathTuples = new ConnectionPath
+            var connectionPath = new PathSegments
             {
-                new PathSegment(RequestPath.ClassBase, options.ClassID),
-                new PathSegment(RequestPath.InstanceBase, 0x01)
+                PathSegmentLogical.FromClassID(options.ClassID),
+                PathSegmentLogical.FromInstanceID(0x01)
             };
 
             if (options.O_T_Assembly.ConnectionType != ConnectionType.Null)
             {
-                pathTuples.Add(new PathSegment(RequestPath.ConnectionPointBase, options.O_T_Assembly.InstanceID));
+                connectionPath.Add(PathSegmentLogical.FromConnectionPointID(options.O_T_Assembly.InstanceID));
             }
 
             if (options.T_O_Assembly.ConnectionType != ConnectionType.Null)
             {
-                pathTuples.Add(new PathSegment(RequestPath.ConnectionPointBase, options.T_O_Assembly.InstanceID));
+                connectionPath.Add(PathSegmentLogical.FromConnectionPointID(options.T_O_Assembly.InstanceID));
             }
 
-            pathTuples.Write(reqProcessor);
+            connectionPath.Write(reqProcessor);
 
             var requestIPV4EndPoint = new CommandItemEndPoint_T_O
             {
@@ -293,7 +297,11 @@ namespace Giselle.Net.EtherNetIP
         {
             var udRequest = new CommandItemUnconnectedDataRequest();
             udRequest.Command = (byte)CommonPacketCommand.ForwardClose;
-            udRequest.Path = new RequestPath(KnownClassID.ConnectionManager, 0x01);
+            udRequest.Path = new PathSegments()
+            {
+                PathSegmentLogical.FromClassID(KnownClassID.ConnectionManager),
+                PathSegmentLogical.FromInstanceID(0x01)
+            };
 
             var reqProcessor = udRequest.DataProcessor;
             reqProcessor.WriteByte(options.TickTime);
@@ -303,21 +311,21 @@ namespace Giselle.Net.EtherNetIP
             reqProcessor.WriteUShort(options.OriginatorVenderID);
             reqProcessor.WriteUInt(options.OriginatorSerialNumber);
 
-            var connectionPath = new ConnectionPath
+            var connectionPath = new PathSegments
             {
-               new PathSegment(RequestPath.ClassBase, options.ClassID),
-               new PathSegment(RequestPath.InstanceBase, 0x01),
+               PathSegmentLogical.FromClassID(options.ClassID),
+               PathSegmentLogical.FromInstanceID(0x01),
             };
             connectionPath.HasReserved = true;
 
             if (options.O_T_ConnectionType != ConnectionType.Null)
             {
-                connectionPath.Add(new PathSegment(RequestPath.ConnectionPointBase, options.O_T_InstanceID));
+                connectionPath.Add(PathSegmentLogical.FromConnectionPointID(options.O_T_InstanceID));
             }
 
             if (options.T_O_ConnectionType != ConnectionType.Null)
             {
-                connectionPath.Add(new PathSegment(RequestPath.ConnectionPointBase, options.T_O_InstanceID));
+                connectionPath.Add(PathSegmentLogical.FromConnectionPointID(options.T_O_InstanceID));
             }
 
             connectionPath.Write(reqProcessor);

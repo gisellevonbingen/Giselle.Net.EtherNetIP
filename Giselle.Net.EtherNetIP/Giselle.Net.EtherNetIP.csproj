@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="AbstractOptions.cs" />
     <Compile Include="AssemblyObject.cs" />
+    <Compile Include="AttributePath.cs" />
     <Compile Include="ClassAttributes.cs" />
     <Compile Include="CommandData.cs" />
     <Compile Include="CommandItem.cs" />
@@ -60,13 +61,15 @@
     <Compile Include="CommandItemSequencedAddress.cs" />
     <Compile Include="CommandItemUnconnectedData.cs" />
     <Compile Include="CommonPacketCommand.cs" />
-    <Compile Include="ConnectionPath.cs" />
     <Compile Include="DataProcessor.cs" />
     <Compile Include="DataProcessorExtensions.cs" />
     <Compile Include="ENIPSimpleClient.cs" />
     <Compile Include="IPAddressUtils.cs" />
+    <Compile Include="IPathSegment.cs" />
+    <Compile Include="PathSegmentSymbolicANSI.cs" />
+    <Compile Include="PathSegmentException.cs" />
     <Compile Include="ObjectsExtensions.cs" />
-    <Compile Include="PathSegment.cs" />
+    <Compile Include="PathSegmentLogical.cs" />
     <Compile Include="ConnectionType.cs" />
     <Compile Include="Encapsulation.cs" />
     <Compile Include="EncapsulationCommand.cs" />
@@ -89,7 +92,7 @@
     <Compile Include="Priority.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RealTimeFormat.cs" />
-    <Compile Include="RequestPath.cs" />
+    <Compile Include="PathSegments.cs" />
     <Compile Include="Revision.cs" />
   </ItemGroup>
   <ItemGroup>

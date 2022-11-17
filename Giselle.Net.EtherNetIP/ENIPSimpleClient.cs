@@ -88,19 +88,19 @@ namespace Giselle.Net.EtherNetIP
             this.TcpStream.DisposeQuietly();
         }
 
-        public DataProcessor GetAttribute(RequestPath path)
+        public DataProcessor GetAttribute(AttributePath path)
         {
             this.EnsureConnected();
             return this.Codec.GetAttribute(this.TcpStream, path);
         }
 
-        public void SetAttribute(RequestPath path, byte[] bytes)
+        public void SetAttribute(AttributePath path, byte[] bytes)
         {
             this.EnsureConnected();
             this.Codec.SetAttribute(this.TcpStream, path, bytes);
         }
 
-        public void SetAttribute(RequestPath path, Action<DataProcessor> bytesMaker)
+        public void SetAttribute(AttributePath path, Action<DataProcessor> bytesMaker)
         {
             this.EnsureConnected();
 

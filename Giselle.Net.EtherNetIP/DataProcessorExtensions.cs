@@ -16,9 +16,9 @@ namespace Giselle.Net.EtherNetIP
 
         public static void WriteCommonPacket(this DataProcessor processor, CommandItems packet) => packet.Write(processor);
 
-        public static RequestPath ReadRequestPath(this DataProcessor processor) => new RequestPath(processor);
+        public static PathSegments ReadPathSegments(this DataProcessor processor) => new PathSegments(processor);
 
-        public static void WriteRequestPath(this DataProcessor processor, RequestPath epath) => epath.Write(processor);
+        public static void WritePathSegments(this DataProcessor processor, PathSegments epath) => epath.Write(processor);
 
         public static CommandData ReadCommandData(this DataProcessor processor, bool isRequest = false) => new CommandData(processor, isRequest);
 

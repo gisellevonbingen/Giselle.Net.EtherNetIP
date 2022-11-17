@@ -94,6 +94,22 @@ namespace Giselle.Net.EtherNetIP
             this.TcpStream.DisposeQuietly();
         }
 
+        public DataProcessor GetAseemblyData(uint instanceId) => this.GetAttribute(new AttributePath(KnownClassID.Assembly, instanceId, KnownAssembyAttributeID.Data));
+
+        public ushort GetAsemblySize(uint instanceId) => this.GetAttribute(new AttributePath(KnownClassID.Assembly, instanceId, KnownAssembyAttributeID.Size)).ReadUShort();
+
+        public void SetAssemblyData(uint instanceId, byte[] bytes) => this.SetAttribute(new AttributePath(KnownClassID.Assembly, instanceId, KnownAssembyAttributeID.Data), bytes);
+
+        public void SetAssemblyData(uint instanceId, Action<DataProcessor> bytesMaker)
+        {
+            using (var ms = new MemoryStream())
+            {
+                bytesMaker(ENIPCodec.CreateDataProcessor(ms));
+                this.SetAssemblyData(instanceId, ms.ToArray());
+            }
+
+        }
+
         public DataProcessor GetAttribute(AttributePath path)
         {
             this.EnsureConnected();

@@ -61,6 +61,7 @@
     <Compile Include="CommandItemSequencedAddress.cs" />
     <Compile Include="CommandItemUnconnectedData.cs" />
     <Compile Include="IdentifyAttributes.cs" />
+    <Compile Include="KnownAssembyAttributeID.cs" />
     <Compile Include="KnownClassAttributeID.cs" />
     <Compile Include="ServiceCode.cs" />
     <Compile Include="DataProcessor.cs" />

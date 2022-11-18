@@ -32,6 +32,8 @@ namespace Giselle.Net.EtherNetIP.CIP
 
         }
 
+        public override string ToString() => $"{this.ClassID}.{this.InstanceID}.{this.AttributeID}";
+
         public override int GetHashCode()
         {
             var hash = 17;

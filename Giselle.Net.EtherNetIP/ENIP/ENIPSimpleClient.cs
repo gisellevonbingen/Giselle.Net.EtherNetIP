@@ -117,13 +117,13 @@ namespace Giselle.Net.EtherNetIP.ENIP
             return this.Codec.GetAttribute(this.TcpStream, path);
         }
 
-        public DataProcessor SetAttribute(AttributePath path, byte[] bytes)
+        public byte SetAttribute(AttributePath path, byte[] bytes)
         {
             this.EnsureConnected();
             return this.Codec.SetAttribute(this.TcpStream, path, bytes);
         }
 
-        public DataProcessor SetAttribute(AttributePath path, Action<DataProcessor> bytesMaker)
+        public byte SetAttribute(AttributePath path, Action<DataProcessor> bytesMaker)
         {
             this.EnsureConnected();
 

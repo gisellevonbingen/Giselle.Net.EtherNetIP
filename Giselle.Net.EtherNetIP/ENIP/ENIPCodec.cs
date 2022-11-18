@@ -149,7 +149,7 @@ namespace Giselle.Net.EtherNetIP.ENIP
             this.CIPCodec.HandleGetAttribute);
 
 
-        public DataProcessor SetAttribute(Stream stream, AttributePath path, byte[] values) => this.ExchangeSendRRData(stream,
+        public byte SetAttribute(Stream stream, AttributePath path, byte[] values) => this.ExchangeSendRRData(stream,
             this.CIPCodec.CreateSetAttribute(path, values),
             this.CIPCodec.HandleSetAttribute);
 

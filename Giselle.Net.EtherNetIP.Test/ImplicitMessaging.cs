@@ -12,7 +12,7 @@ using Giselle.Net.EtherNetIP.ENIP;
 
 namespace Giselle.Net.EtherNetIP.Test
 {
-    public class Program
+    public class ImplicitMessaging
     {
         public static void Main()
         {
@@ -20,8 +20,10 @@ namespace Giselle.Net.EtherNetIP.Test
             {
                 try
                 {
+                    Console.Write("Enter IPAdress: ");
+                    var hostname = Console.ReadLine();
                     Console.WriteLine("Connecting");
-                    client.Connect(IPAddress.Parse("192.168.1.200"));
+                    client.Connect(IPAddress.Parse(hostname));
                     Console.WriteLine("Connected");
                 }
                 catch

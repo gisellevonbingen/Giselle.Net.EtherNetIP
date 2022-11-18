@@ -46,9 +46,9 @@ namespace Giselle.Net.EtherNetIP.CIP
             return udRequest;
         }
 
-        public DataProcessor HandleSetAttribute(CommandItems response)
+        public byte HandleSetAttribute(CommandItems response)
         {
-            return response.Find<CommandItemUnconnectedDataResponse>().DataProcessor;
+            return response.Find<CommandItemUnconnectedDataResponse>().Error;
         }
 
         public CommandItem CreateForwardOpen(ForwardOpenOptions options)

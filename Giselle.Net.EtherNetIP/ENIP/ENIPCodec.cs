@@ -13,11 +13,13 @@ namespace Giselle.Net.EtherNetIP.ENIP
 
         public CIPCodec CIPCodec { get; set; }
         public uint SessionID { get; set; }
+        public ushort SendRRDataTimeout { get; set; }
 
         public ENIPCodec()
         {
             this.CIPCodec = new CIPCodec();
             this.SessionID = 0;
+            this.SendRRDataTimeout = 0;
         }
 
         public IdentifyAttributes GetIdentifyAttributes(Stream stream) => new IdentifyAttributes(this, stream);
@@ -56,7 +58,7 @@ namespace Giselle.Net.EtherNetIP.ENIP
             return encapsulation;
         }
 
-        public Encapsulation CreateSendRRData(CommandData data)
+        public Encapsulation CreateEncapsulation(SendRRData data)
         {
             var encapsulation = this.CreateEncapsulation();
             encapsulation.Command = EncapsulationCommand.SendRRData;
@@ -65,7 +67,7 @@ namespace Giselle.Net.EtherNetIP.ENIP
             return encapsulation;
         }
 
-        public CommandData ReadCommandData(Encapsulation response, bool isRequest) => response.DataProcessor.ReadCommandData(isRequest);
+        public SendRRData ReadCommandData(Encapsulation response, bool isRequest) => response.DataProcessor.ReadCommandData(isRequest);
 
         public Encapsulation CreateRegisterSession()
         {
@@ -119,33 +121,43 @@ namespace Giselle.Net.EtherNetIP.ENIP
             this.HandleUnRegisterSession();
         }
 
-        public CommandData ExchangeCommandData(Stream stream, CommandData request)
+        public SendRRData CreateSendRRData(params CommandItem[] items) => this.CreateSendRRData((IEnumerable<CommandItem>)items);
+
+        public SendRRData CreateSendRRData(IEnumerable<CommandItem> items) => new SendRRData(items) { Timeout = this.SendRRDataTimeout };
+
+        public CommandItems ExchangeSendRRData(Stream stream, CommandItem request)
         {
             var req = this.CreateSendRRData(request);
-            var res = this.ExchangeEncapsulation(stream, req);
-            return this.ReadCommandData(res, false);
+            return this.ExchangeSendRRData(stream, req);
         }
 
-        public RES ExchangeCommandData<RES>(Stream stream, CommandData request, Func<CommandData, RES> responseFunc)
+        public CommandItems ExchangeSendRRData(Stream stream, SendRRData request)
         {
-            var response = this.ExchangeCommandData(stream, request);
+            var req = this.CreateEncapsulation(request);
+            var res = this.ExchangeEncapsulation(stream, req);
+            return this.ReadCommandData(res, false).Items;
+        }
+
+        private RES ExchangeSendRRData<RES>(Stream stream, CommandItem request, Func<CommandItems, RES> responseFunc)
+        {
+            var response = this.ExchangeSendRRData(stream, request);
             return responseFunc(response);
         }
 
-        public DataProcessor GetAttribute(Stream stream, AttributePath path) => this.ExchangeCommandData(stream,
+        public DataProcessor GetAttribute(Stream stream, AttributePath path) => this.ExchangeSendRRData(stream,
             this.CIPCodec.CreateGetAttribute(path),
             this.CIPCodec.HandleGetAttribute);
 
 
-        public DataProcessor SetAttribute(Stream stream, AttributePath path, byte[] values) => this.ExchangeCommandData(stream,
+        public DataProcessor SetAttribute(Stream stream, AttributePath path, byte[] values) => this.ExchangeSendRRData(stream,
             this.CIPCodec.CreateSetAttribute(path, values),
             this.CIPCodec.HandleSetAttribute);
 
-        public ForwardOpenResult ForwardOpen(Stream stream, ForwardOpenOptions options) => this.ExchangeCommandData(stream,
+        public ForwardOpenResult ForwardOpen(Stream stream, ForwardOpenOptions options) => this.ExchangeSendRRData(stream,
             this.CIPCodec.CreateForwardOpen(options),
             response => this.CIPCodec.HandleForwardOpen(response, options));
 
-        public ForwardCloseResult ForwardClose(Stream stream, ForwardCloseOptions options) => this.ExchangeCommandData(stream,
+        public ForwardCloseResult ForwardClose(Stream stream, ForwardCloseOptions options) => this.ExchangeSendRRData(stream,
             this.CIPCodec.CreateForwardClose(options),
             response => this.CIPCodec.HandleForwardClose(response, options));
 

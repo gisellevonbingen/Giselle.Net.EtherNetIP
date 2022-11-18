@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Giselle.Net.EtherNetIP.CIP;
 
-namespace Giselle.Net.EtherNetIP.CIP
+namespace Giselle.Net.EtherNetIP.ENIP
 {
-    public class CommandData
+    public class SendRRData
     {
         public InterfaceHandle InterfaceHandle { get; set; }
         public ushort Timeout { get; set; }
 
         public CommandItems Items { get; private set; }
 
-        public CommandData()
+        public SendRRData()
         {
             this.InterfaceHandle = InterfaceHandle.CIP;
             this.Timeout = 0;
@@ -19,7 +20,17 @@ namespace Giselle.Net.EtherNetIP.CIP
             this.Items = new CommandItems();
         }
 
-        public CommandData(DataProcessor processor, bool isRequest) : this()
+        public SendRRData(params CommandItem[] collection) : this()
+        {
+            this.Items.AddRange(collection);
+        }
+
+        public SendRRData(IEnumerable<CommandItem> collection) : this()
+        {
+            this.Items.AddRange(collection);
+        }
+
+        public SendRRData(DataProcessor processor, bool isRequest) : this()
         {
             this.Read(processor, isRequest);
         }

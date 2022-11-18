@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Giselle.Net.EtherNetIP.CIP
+namespace Giselle.Net.EtherNetIP.ENIP
 {
     public enum InterfaceHandle : uint
     {

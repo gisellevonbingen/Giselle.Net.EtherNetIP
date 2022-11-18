@@ -117,20 +117,20 @@ namespace Giselle.Net.EtherNetIP.ENIP
             return this.Codec.GetAttribute(this.TcpStream, path);
         }
 
-        public void SetAttribute(AttributePath path, byte[] bytes)
+        public DataProcessor SetAttribute(AttributePath path, byte[] bytes)
         {
             this.EnsureConnected();
-            this.Codec.SetAttribute(this.TcpStream, path, bytes);
+            return this.Codec.SetAttribute(this.TcpStream, path, bytes);
         }
 
-        public void SetAttribute(AttributePath path, Action<DataProcessor> bytesMaker)
+        public DataProcessor SetAttribute(AttributePath path, Action<DataProcessor> bytesMaker)
         {
             this.EnsureConnected();
 
             using (var ms = new MemoryStream())
             {
                 bytesMaker(ENIPCodec.CreateDataProcessor(ms));
-                this.Codec.SetAttribute(this.TcpStream, path, ms.ToArray());
+                return this.Codec.SetAttribute(this.TcpStream, path, ms.ToArray());
             }
 
         }

@@ -22,48 +22,36 @@ namespace Giselle.Net.EtherNetIP.CIP
             this.Random = new Random();
         }
 
-        public CommandData CreateCommandData(params CommandItem[] collection)
-        {
-            return this.CreateCommandData((IEnumerable<CommandItem>)collection);
-        }
-
-        public CommandData CreateCommandData(IEnumerable<CommandItem> collection)
-        {
-            var data = new CommandData();
-            data.Items.AddRange(collection);
-            return data;
-        }
-
-        public CommandData CreateGetAttribute(AttributePath path)
+        public CommandItemUnconnectedDataRequest CreateGetAttribute(AttributePath path)
         {
             var udRequest = new CommandItemUnconnectedDataRequest();
             udRequest.ServiceCode = path.AttributeID == 0 ? ServiceCode.GetAttributeAll : ServiceCode.GetAttributeSingle;
             udRequest.Path = path.AsEPath();
 
-            return this.CreateCommandData(udRequest);
+            return udRequest;
         }
 
-        public DataProcessor HandleGetAttribute(CommandData response)
+        public DataProcessor HandleGetAttribute(CommandItems response)
         {
-            return response.Items.Find<CommandItemUnconnectedDataResponse>().DataProcessor;
+            return response.Find<CommandItemUnconnectedDataResponse>().DataProcessor;
         }
 
-        public CommandData CreateSetAttribute(AttributePath path, byte[] values)
+        public CommandItemUnconnectedDataRequest CreateSetAttribute(AttributePath path, byte[] values)
         {
             var udRequest = new CommandItemUnconnectedDataRequest();
             udRequest.ServiceCode = ServiceCode.SetAttributeSingle;
             udRequest.Path = path.AsEPath();
             udRequest.DataProcessor.WriteBytes(values);
 
-            return this.CreateCommandData(udRequest);
+            return udRequest;
         }
 
-        public DataProcessor HandleSetAttribute(CommandData response)
+        public DataProcessor HandleSetAttribute(CommandItems response)
         {
-            return response.Items.Find<CommandItemUnconnectedDataResponse>().DataProcessor;
+            return response.Find<CommandItemUnconnectedDataResponse>().DataProcessor;
         }
 
-        public CommandData CreateForwardOpen(ForwardOpenOptions options)
+        public CommandItem CreateForwardOpen(ForwardOpenOptions options)
         {
             var udRequest = new CommandItemUnconnectedDataRequest();
             udRequest.ServiceCode = ServiceCode.ForwardOpen;
@@ -133,14 +121,14 @@ namespace Giselle.Net.EtherNetIP.CIP
                 requestIPV4EndPoint.EndPoint.Address = IPAddress.Any;
             }
 
-            return this.CreateCommandData(udRequest, requestIPV4EndPoint);
+            return udRequest;
         }
 
-        public ForwardOpenResult HandleForwardOpen(CommandData response, ForwardOpenOptions options)
+        public ForwardOpenResult HandleForwardOpen(CommandItems response, ForwardOpenOptions options)
         {
             var result = new ForwardOpenResult() { Options = options };
 
-            foreach (var item in response.Items)
+            foreach (var item in response)
             {
                 if (item is CommandItemUnconnectedDataResponse udResponse)
                 {
@@ -171,7 +159,7 @@ namespace Giselle.Net.EtherNetIP.CIP
             return result;
         }
 
-        public CommandData CreateForwardClose(ForwardCloseOptions options)
+        public CommandItemUnconnectedDataRequest CreateForwardClose(ForwardCloseOptions options)
         {
             var udRequest = new CommandItemUnconnectedDataRequest();
             udRequest.ServiceCode = ServiceCode.ForwardClose;
@@ -208,14 +196,14 @@ namespace Giselle.Net.EtherNetIP.CIP
 
             connectionPath.Write(reqProcessor);
 
-            return this.CreateCommandData(udRequest);
+            return udRequest;
         }
 
-        public ForwardCloseResult HandleForwardClose(CommandData response, ForwardCloseOptions options)
+        public ForwardCloseResult HandleForwardClose(CommandItems response, ForwardCloseOptions options)
         {
             var result = new ForwardCloseResult() { Options = options };
 
-            foreach (var item in response.Items)
+            foreach (var item in response)
             {
                 if (item is CommandItemUnconnectedDataResponse udResponse)
                 {

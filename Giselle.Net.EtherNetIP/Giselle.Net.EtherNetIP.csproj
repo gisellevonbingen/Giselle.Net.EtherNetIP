@@ -51,7 +51,7 @@
     <Compile Include="CIP\AttributePath.cs" />
     <Compile Include="CIP\CIPCodec.cs" />
     <Compile Include="ENIP\ClassAttributes.cs" />
-    <Compile Include="CIP\CommandData.cs" />
+    <Compile Include="ENIP\SendRRData.cs" />
     <Compile Include="CIP\CommandItem.cs" />
     <Compile Include="CIP\CommandItemConnectedData.cs" />
     <Compile Include="CIP\CommandItemIPv4EndPoint.cs" />
@@ -86,7 +86,7 @@
     <Compile Include="CIP\ForwardCloseResult.cs" />
     <Compile Include="CIP\ForwardOpenOptions.cs" />
     <Compile Include="CIP\ForwardOpenResult.cs" />
-    <Compile Include="CIP\InterfaceHandle.cs" />
+    <Compile Include="ENIP\InterfaceHandle.cs" />
     <Compile Include="IPv4EndPoint.cs" />
     <Compile Include="CIP\KnownClassID.cs" />
     <Compile Include="CIP\KnownIdentifyAttributeID.cs" />

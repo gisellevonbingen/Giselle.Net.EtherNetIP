@@ -10,6 +10,7 @@
 
 # References
 - https://github.com/boundary/wireshark/blob/master/epan/dissectors/packet-enip.c
+- https://literature.rockwellautomation.com/idc/groups/literature/documents/pm/1756-pm020_-en-p.pdf
 - https://www.hilscher.com/fileadmin/cms_upload/ja/Resources/pdf/EtherNetIP_Adapter_V3_Protocol_API_04_EN.pdf
 
 # License
@@ -37,6 +38,8 @@ SOFTWARE.
 
 # Example
 
-[Giselle.Net.EtherNetIP.Test\Program.cs](https://github.com/gisellevonbingen/Giselle.Net.EtherNetIP/blob/main/Giselle.Net.EtherNetIP.Test/Program.cs)
+[Get/Set Attribute](https://github.com/gisellevonbingen/Giselle.Net.EtherNetIP/blob/main/Giselle.Net.EtherNetIP.Test/AttributeGetSet.cs)
 
-[Giselle.Net.EtherNetIP\ENIPSimpleClient.cs](https://github.com/gisellevonbingen/Giselle.Net.EtherNetIP/blob/main/Giselle.Net.EtherNetIP/ENIPSimpleClient.cs)
+[Implicit Messaging](https://github.com/gisellevonbingen/Giselle.Net.EtherNetIP/blob/main/Giselle.Net.EtherNetIP.Test/ImplicitMessaging.cs)
+
+[ENIPClient Implementation](https://github.com/gisellevonbingen/Giselle.Net.EtherNetIP/blob/main/Giselle.Net.EtherNetIP/ENIP/ENIPSimpleClient.cs)

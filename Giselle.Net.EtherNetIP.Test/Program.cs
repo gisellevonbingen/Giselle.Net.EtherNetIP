@@ -7,6 +7,8 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Giselle.Net.EtherNetIP.CIP;
+using Giselle.Net.EtherNetIP.ENIP;
 
 namespace Giselle.Net.EtherNetIP.Test
 {
@@ -37,8 +39,8 @@ namespace Giselle.Net.EtherNetIP.Test
 
                 // Events for use Implicit Messaging
                 client.ImplicitMessagingException += (sender, exception) => Console.WriteLine($"Exception: {exception}");
-                client.ImplicitMessageReceived += (sender, bytes) => Console.WriteLine($"Received: {BitConverter.ToString(bytes)}");
-                client.ImplicitMessageSending += (sender, bytes) => FillSendingBytes(client, bytes);
+                client.ImplicitMessageReceived    += (sender, bytes)     => Console.WriteLine($"Received: {BitConverter.ToString(bytes)}");
+                client.ImplicitMessageSending     += (sender, bytes)     => FillSendingBytes(client, bytes);
 
                 var openResult = ForwardOpen(client);
 

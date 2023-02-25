@@ -1,7 +1,6 @@
 # Giselle.Net.EtherNetIP
 - Practice repository for test EtherNetIP protocol
 - Capture/Analyze with WireShark
-- Test with ControlTechniques Servo Drives
 
 # Features
 - CIP EtherNet/IP

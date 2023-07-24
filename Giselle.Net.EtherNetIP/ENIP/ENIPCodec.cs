@@ -131,6 +131,12 @@ namespace Giselle.Net.EtherNetIP.ENIP
             return this.ExchangeSendRRData(stream, req);
         }
 
+        public CommandItems ExchangeSendRRData(Stream stream, IEnumerable<CommandItem> requests)
+        {
+            var req = this.CreateSendRRData(requests);
+            return this.ExchangeSendRRData(stream, req);
+        }
+
         public CommandItems ExchangeSendRRData(Stream stream, SendRRData request)
         {
             var req = this.CreateEncapsulation(request);
@@ -139,6 +145,12 @@ namespace Giselle.Net.EtherNetIP.ENIP
         }
 
         private RES ExchangeSendRRData<RES>(Stream stream, Func<CommandItems, RES> responseFunc, params CommandItem[] requests)
+        {
+            var response = this.ExchangeSendRRData(stream, requests);
+            return responseFunc(response);
+        }
+
+        private RES ExchangeSendRRData<RES>(Stream stream, Func<CommandItems, RES> responseFunc, IEnumerable<CommandItem> requests)
         {
             var response = this.ExchangeSendRRData(stream, requests);
             return responseFunc(response);

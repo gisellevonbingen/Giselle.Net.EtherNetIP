@@ -51,7 +51,7 @@ namespace Giselle.Net.EtherNetIP.CIP
             return response.Find<CommandItemUnconnectedDataResponse>().Error;
         }
 
-        public CommandItem CreateForwardOpen(ForwardOpenOptions options)
+        public IEnumerable<CommandItem> CreateForwardOpen(ForwardOpenOptions options)
         {
             var udRequest = new CommandItemUnconnectedDataRequest();
             udRequest.ServiceCode = ServiceCode.ForwardOpen;
@@ -106,6 +106,7 @@ namespace Giselle.Net.EtherNetIP.CIP
             }
 
             connectionPath.Write(reqProcessor);
+            yield return udRequest;
 
             var requestIPV4EndPoint = new CommandItemEndPoint_T_O
             {
@@ -121,7 +122,7 @@ namespace Giselle.Net.EtherNetIP.CIP
                 requestIPV4EndPoint.EndPoint.Address = IPAddress.Any;
             }
 
-            return udRequest;
+            yield return requestIPV4EndPoint;
         }
 
         public ForwardOpenResult HandleForwardOpen(CommandItems response, ForwardOpenOptions options)

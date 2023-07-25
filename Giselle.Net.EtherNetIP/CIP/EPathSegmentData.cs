@@ -8,7 +8,7 @@ namespace Giselle.Net.EtherNetIP.CIP
 {
     public struct EPathSegmentData : IEquatable<EPathSegmentData>, IEPathSegment
     {
-        public const byte SegmentType = 0x08;
+        public const byte SegmentType = 0x04;
 
         public const byte DataTypeMask = 0x3F;
         public const byte DataTypeOffset = 0;

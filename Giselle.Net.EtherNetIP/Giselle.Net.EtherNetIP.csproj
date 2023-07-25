@@ -50,6 +50,9 @@
     <Compile Include="CIP\AssemblyObject.cs" />
     <Compile Include="CIP\AttributePath.cs" />
     <Compile Include="CIP\CIPCodec.cs" />
+    <Compile Include="CIP\EPathSegmentData.cs" />
+    <Compile Include="CIP\KnownEPathDataSegmentType.cs" />
+    <Compile Include="CIP\KnownEPathLogicalSegmentType.cs" />
     <Compile Include="ENIP\ClassAttributes.cs" />
     <Compile Include="ENIP\SendRRData.cs" />
     <Compile Include="CIP\CommandItem.cs" />
@@ -64,7 +67,6 @@
     <Compile Include="CIP\EPath.cs" />
     <Compile Include="CIP\EPathException.cs" />
     <Compile Include="CIP\EPathSegmentLogical.cs" />
-    <Compile Include="CIP\EPathSegmentSymbolicANSI.cs" />
     <Compile Include="ENIP\IdentifyAttributes.cs" />
     <Compile Include="CIP\IEPathSegment.cs" />
     <Compile Include="CIP\KnownAssembyAttributeID.cs" />

@@ -8,17 +8,31 @@ namespace Giselle.Net.EtherNetIP.CIP
 {
     public class EPath : List<IEPathSegment>, IEquatable<EPath>
     {
-        public static EPath FromANSI(string value) => new EPath() { EPathSegmentSymbolicANSI.FromValue(value) };
+        public const byte SegmentTypeMask = 0xE0;
+        public const byte SegmentTypeOffset = 5;
+        public const byte SegmentRemainMask = 0x1F;
+        public const byte SegmentRemainOffset = 0;
 
-        public static IEPathSegment CreateSegment(byte type)
+        public static EPath FromANSI(string value) => new EPath() { EPathSegmentData.FromSymbolicANSI(value) };
+
+        public static byte ToSegmentType(byte typeAssembly) => (byte)((typeAssembly & SegmentTypeMask) >> SegmentTypeOffset);
+
+        public static byte MergeSegmentTypeAssembly(byte segmentType, byte other)
         {
-            if (type == EPathSegmentSymbolicANSI.Base)
+            return (byte)((SegmentTypeMask & (segmentType << SegmentTypeOffset)) | (SegmentRemainMask & (other << SegmentRemainOffset)));
+        }
+
+        public static IEPathSegment CreateSegment(byte typeAssembly)
+        {
+            var type = ToSegmentType(typeAssembly);
+
+            if (type == EPathSegmentLogical.SegmentType)
             {
-                return new EPathSegmentSymbolicANSI();
+                return new EPathSegmentLogical() { LogicalType = EPathSegmentLogical.ToLogicalType(typeAssembly) };
             }
-            else if (EPathSegmentLogical.RangeStart <= type && type <= EPathSegmentLogical.RangeEnd)
+            else if (type == EPathSegmentData.SegmentType)
             {
-                return new EPathSegmentLogical() { TypeBase = EPathSegmentLogical.ToTypeBase(type) };
+                return new EPathSegmentData() { DataType = EPathSegmentData.ToDataType(typeAssembly) };
             }
             else
             {
@@ -65,9 +79,9 @@ namespace Giselle.Net.EtherNetIP.CIP
 
                 while (segmentStream.Position < segmentStream.Length)
                 {
-                    var segmentType = processor.ReadByte();
-                    var segment = CreateSegment(segmentType);
-                    segment.ReadValue(segmentType, segmentProcessor);
+                    var segmentTypeAssembly = processor.ReadByte();
+                    var segment = CreateSegment(segmentTypeAssembly);
+                    segment.ReadValue(segmentTypeAssembly, segmentProcessor);
                     this.Add(segment);
                 }
 
@@ -88,7 +102,7 @@ namespace Giselle.Net.EtherNetIP.CIP
 
                 foreach (var segment in this)
                 {
-                    segmentProcessor.WriteByte(segment.Type);
+                    segmentProcessor.WriteByte(segment.TypeAssembly);
                     segment.WriteValue(segmentProcessor);
                 }
 

@@ -8,9 +8,9 @@ namespace Giselle.Net.EtherNetIP.CIP
 {
     public interface IEPathSegment
     {
-        byte Type { get; }
+        byte TypeAssembly { get; }
 
-        void ReadValue(byte readingType, DataProcessor processor);
+        void ReadValue(byte readingTypeAssembly, DataProcessor processor);
 
         void WriteValue(DataProcessor processor);
 

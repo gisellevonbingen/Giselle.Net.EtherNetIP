@@ -7,113 +7,126 @@ namespace Giselle.Net.EtherNetIP.CIP
 {
     public struct EPathSegmentLogical : IEquatable<EPathSegmentLogical>, IEPathSegment
     {
-        public const byte RangeStart = 0x20;
-        public const byte RangeEnd = 0x3F;
+        public const byte SegmentType = 0x01;
 
-        public const byte ClassIDBase = 0x20;
-        public const byte InstanceIDBase = 0x24;
-        public const byte ElementIDBase = 0x28;
-        public const byte ConnectionPointIDBase = 0x2C;
-        public const byte AttributeIDBase = 0x30;
+        public const byte LogicalTypeMask = 0x1C;
+        public const byte LogicalTypeOffset = 2;
+        public const byte FormatTypeMask = 0x03;
+        public const byte FormatTypeOffset = 0;
 
-        public static byte ToTypeBase(byte readingType) => (byte)((readingType + 3) % 4);
+        public const byte FormatType8Bits = 0x00;
+        public const byte FormatType16Bits = 0x01;
+        public const byte FormatType32Bits = 0x02;
 
-        public static EPathSegmentLogical FromClassID(uint value) => new EPathSegmentLogical(ClassIDBase, value);
+        public static byte ToLogicalType(byte typeAssembly) => (byte)((typeAssembly & LogicalTypeMask) >> LogicalTypeOffset);
 
-        public static EPathSegmentLogical FromInstanceID(uint value) => new EPathSegmentLogical(InstanceIDBase, value);
+        public static byte ToFormatType(byte typeAssembly) => (byte)((typeAssembly & FormatTypeMask) >> FormatTypeOffset);
 
-        public static EPathSegmentLogical FromElementID(uint value) => new EPathSegmentLogical(ElementIDBase, value);
+        public static EPathSegmentLogical FromClassID(uint value) => new EPathSegmentLogical(KnownEPathLogicalSegmentType.ClassID, value);
 
-        public static EPathSegmentLogical FromConnectionPointID(uint value) => new EPathSegmentLogical(ConnectionPointIDBase, value);
+        public static EPathSegmentLogical FromInstanceID(uint value) => new EPathSegmentLogical(KnownEPathLogicalSegmentType.InstanceID, value);
 
-        public static EPathSegmentLogical FromAttributeID(uint value) => new EPathSegmentLogical(AttributeIDBase, value);
+        public static EPathSegmentLogical FromElementID(uint value) => new EPathSegmentLogical(KnownEPathLogicalSegmentType.ElementID, value);
 
-        public byte TypeBase { get; set; }
+        public static EPathSegmentLogical FromConnectionPointID(uint value) => new EPathSegmentLogical(KnownEPathLogicalSegmentType.ConnectionPointID, value);
+
+        public static EPathSegmentLogical FromAttributeID(uint value) => new EPathSegmentLogical(KnownEPathLogicalSegmentType.AttributeID, value);
+
+        public byte LogicalType { get; set; }
         public uint Value { get; set; }
 
-        public EPathSegmentLogical(byte typeBase, uint value = 0)
+        public EPathSegmentLogical(byte logicalType, uint value = 0)
             : this()
         {
-            this.TypeBase = typeBase;
+            this.LogicalType = logicalType;
             this.Value = value;
         }
 
-        public byte Type
+        public byte TypeAssembly
         {
             get
             {
-                var typeBase = this.TypeBase;
+                return EPath.MergeSegmentTypeAssembly(SegmentType, (byte)(
+                    (LogicalTypeMask & (this.LogicalType << LogicalTypeOffset)) |
+                    (FormatTypeMask & (this.FormatType << FormatTypeOffset))));
+            }
+
+        }
+
+        public byte FormatType
+        {
+            get
+            {
                 var id = this.Value;
 
                 if (id > ushort.MaxValue)
                 {
-                    return (byte)(typeBase + 2);
+                    return FormatType32Bits;
                 }
                 else if (id > byte.MaxValue)
                 {
-                    return (byte)(typeBase + 1);
+                    return FormatType16Bits;
                 }
                 else
                 {
-                    return (byte)(typeBase + 0);
+                    return FormatType8Bits;
                 }
 
             }
 
         }
 
-        public void ReadValue(byte readingType, DataProcessor processor)
+        public void ReadValue(byte readingTypeAssembly, DataProcessor processor)
         {
-            var mod = readingType % 4;
+            var formatType = ToFormatType(readingTypeAssembly);
 
-            if (mod == 0)
+            if (formatType == FormatType8Bits)
             {
                 this.Value = processor.ReadByte();
             }
-            else if (mod == 1)
+            else if (formatType == FormatType16Bits)
             {
                 // Pad to words
                 processor.ReadByte();
                 this.Value = processor.ReadUShort();
             }
-            else if (mod == 2)
+            else if (formatType == FormatType32Bits)
             {
                 // Pad to words
                 processor.ReadByte();
                 this.Value = processor.ReadUInt();
             }
-            else if (mod == 3)
+            else
             {
-                throw new EPathException($"Logical Segment Type({readingType}) is not supported");
+                throw new EPathException($"Unknown Logical Segment FormatType: ({formatType:X2})");
             }
 
         }
 
         public void WriteValue(DataProcessor processor)
         {
-            var type = this.Type;
-            var mod = type % 4;
+            var formatType = this.FormatType;
             var value = this.Value;
 
-            if (mod == 0)
+            if (formatType == FormatType8Bits)
             {
                 processor.WriteByte((byte)value);
             }
-            else if (mod == 1)
+            else if (formatType == FormatType16Bits)
             {
                 // Pad to words
                 processor.WriteByte(0);
                 processor.WriteUShort((ushort)value);
             }
-            else if (mod == 2)
+            else if (formatType == FormatType32Bits)
             {
                 // Pad to words
                 processor.WriteByte(0);
                 processor.WriteUInt(value);
             }
-            else if (mod == 3)
+            else
             {
-                throw new EPathException($"Logical Segment Type({type}) is not supported");
+                throw new EPathException($"Unknown Logical Segment FormatType: ({formatType:X2})");
             }
 
         }
@@ -121,7 +134,7 @@ namespace Giselle.Net.EtherNetIP.CIP
         public override int GetHashCode()
         {
             var hash = 17;
-            hash = hash * 31 + this.TypeBase.GetHashCode();
+            hash = hash * 31 + this.LogicalType.GetHashCode();
             hash = hash * 31 + this.Value.GetHashCode();
             return hash;
         }
@@ -138,7 +151,7 @@ namespace Giselle.Net.EtherNetIP.CIP
                 return false;
             }
 
-            if (this.TypeBase != other.TypeBase)
+            if (this.LogicalType != other.LogicalType)
             {
                 return false;
             }

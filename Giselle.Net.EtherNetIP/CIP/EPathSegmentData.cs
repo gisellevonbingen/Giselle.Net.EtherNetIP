@@ -49,7 +49,7 @@ namespace Giselle.Net.EtherNetIP.CIP
         public void WriteValue(DataProcessor processor)
         {
             var payload = this.Payload;
-            processor.WriteByte((byte)payload.Length);
+            processor.WriteByte((byte)((payload.Length + 1) / 2)); // +1 for pad
             processor.WriteBytes(payload);
 
             // Pad to words

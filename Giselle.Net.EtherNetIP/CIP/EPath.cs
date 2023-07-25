@@ -13,7 +13,7 @@ namespace Giselle.Net.EtherNetIP.CIP
         public const byte SegmentRemainMask = 0x1F;
         public const byte SegmentRemainOffset = 0;
 
-        public static EPath FromANSI(string value) => new EPath() { EPathSegmentData.FromSymbolicANSI(value) };
+        public static EPath FromSymbolicANSI(string value) => new EPath() { EPathSegmentData.FromSymbolicANSI(value) };
 
         public static byte ToSegmentType(byte typeAssembly) => (byte)((typeAssembly & SegmentTypeMask) >> SegmentTypeOffset);
 

@@ -89,11 +89,10 @@ namespace Giselle.Net.EtherNetIP.Test
 
         public static ForwardOpenResult ForwardOpen(ENIPSimpleClient client)
         {
-            var openOptions = new ForwardOpenOptions();
-            openOptions.T_O_UDPPort = 2222; // Support alternate port, Default is 2222
-
             // T : Target
             // O : Originator
+            var openOptions = new ForwardOpenOptions();
+            openOptions.T_O_UDPPort = 2222; // Support alternate port, Default is 2222
 
             openOptions.O_T_Assembly.InstanceID = 101; // Your O->T assembly instance id
             openOptions.O_T_Assembly.Length = 64;

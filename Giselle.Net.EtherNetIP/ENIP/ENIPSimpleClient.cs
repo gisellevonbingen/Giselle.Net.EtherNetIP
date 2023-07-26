@@ -164,11 +164,14 @@ namespace Giselle.Net.EtherNetIP.ENIP
 
         private UdpClient CreateImplictMessagingClient(ForwardOpenResult openResult)
         {
-            var options = openResult.Options;
-            var port = 2222; // Receiving port is fixed 2222, in my test
-
             var udpClient = new UdpClient();
-            udpClient.Client.Bind(new IPEndPoint(options.LocalAddress, port));
+            var options = openResult.Options;
+            udpClient.Client.Bind(new IPEndPoint(options.LocalAddress, openResult.Options.T_O_UDPPort));
+
+            if (openResult.Options.O_T_Assembly.ConnectionType == ConnectionType.Multicast)
+            {
+                udpClient.JoinMulticastGroup(openResult.O_T_Address.Address, options.LocalAddress);
+            }
 
             if (openResult.Options.T_O_Assembly.ConnectionType == ConnectionType.Multicast)
             {
@@ -218,7 +221,7 @@ namespace Giselle.Net.EtherNetIP.ENIP
             var udpClient = this.UdpClient;
             var result = this.LastForwardOpenResult;
             var options = result.Options;
-            var targetEndPoint = new IPEndPoint(((IPEndPoint)this.TcpClient.Client.RemoteEndPoint).Address, options.T_O_UDPPort);
+            var targetEndPoint = new IPEndPoint(((IPEndPoint)this.TcpClient.Client.RemoteEndPoint).Address, options.O_T_UDPPort);
 
             try
             {

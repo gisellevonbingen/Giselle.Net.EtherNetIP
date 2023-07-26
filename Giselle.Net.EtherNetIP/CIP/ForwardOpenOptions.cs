@@ -16,6 +16,16 @@ namespace Giselle.Net.EtherNetIP.CIP
         /// </summary>
         public AssemblyObject T_O_Assembly { get; private set; }
 
+        /// <summary>
+        /// Originator -> Target, Output
+        /// Originator Side Port For Exchange Message
+        /// </summary>
+        public ushort O_T_UDPPort { get; set; }
+        /// <summary>
+        /// Target -> Originator, Input
+        /// Target Side Port For Exchange Message
+        /// Not Supported Yet, Fix Default Value (2222)
+        /// </summary>
         public ushort T_O_UDPPort { get; set; }
         public IPAddress LocalAddress { get; set; }
 
@@ -24,6 +34,7 @@ namespace Giselle.Net.EtherNetIP.CIP
             this.O_T_Assembly = new AssemblyObject();
             this.T_O_Assembly = new AssemblyObject();
 
+            this.O_T_UDPPort = 2222;
             this.T_O_UDPPort = 2222;
             this.LocalAddress = IPAddress.Loopback;
         }
@@ -34,6 +45,7 @@ namespace Giselle.Net.EtherNetIP.CIP
             this.O_T_Assembly = new AssemblyObject(other.O_T_Assembly);
             this.T_O_Assembly = new AssemblyObject(other.T_O_Assembly);
 
+            this.O_T_UDPPort = other.O_T_UDPPort;
             this.T_O_UDPPort = other.T_O_UDPPort;
             this.LocalAddress = other.LocalAddress;
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -65,8 +66,9 @@ namespace Giselle.Net.EtherNetIP.CIP
             reqProcessor.WriteByte(options.TickTime);
             reqProcessor.WriteByte(options.TimeoutTicks);
 
-            var otConnectionIDReq = options.O_T_Assembly.ConnectionID != 0 ? options.O_T_Assembly.ConnectionID : (ushort)(this.NextConnectionID() + 0);
-            var toConnectionIDReq = options.T_O_Assembly.ConnectionID != 0 ? options.T_O_Assembly.ConnectionID : (ushort)(this.NextConnectionID() + 1);
+            var connectionID = this.NextConnectionID();
+            var otConnectionIDReq = options.O_T_Assembly.ConnectionID != 0 ? options.O_T_Assembly.ConnectionID : (ushort)(connectionID + 0);
+            var toConnectionIDReq = options.T_O_Assembly.ConnectionID != 0 ? options.T_O_Assembly.ConnectionID : (ushort)(connectionID + 1);
             reqProcessor.WriteUInt(otConnectionIDReq);
             reqProcessor.WriteUInt(toConnectionIDReq);
 
@@ -108,21 +110,20 @@ namespace Giselle.Net.EtherNetIP.CIP
             connectionPath.Write(reqProcessor);
             yield return udRequest;
 
-            var requestIPV4EndPoint = new CommandItemEndPoint_T_O
+            var toEndPoint = new CommandItemEndPoint_T_O
             {
                 EndPoint = new IPv4EndPoint() { Family = 2, Port = options.T_O_UDPPort }
             };
 
             if (options.T_O_Assembly.ConnectionType == ConnectionType.Multicast)
             {
-                requestIPV4EndPoint.EndPoint.Address = ((int)GetMulticastAddress((uint)options.LocalAddress.ToIPv4Address())).ToIPv4Address(true);
+                toEndPoint.EndPoint.Address = ((int)GetMulticastAddress((uint)options.LocalAddress.ToIPv4Address())).ToIPv4Address(true);
             }
             else
             {
-                requestIPV4EndPoint.EndPoint.Address = IPAddress.Any;
+                toEndPoint.EndPoint.Address = IPAddress.Any;
             }
-
-            yield return requestIPV4EndPoint;
+            yield return toEndPoint;
         }
 
         public ForwardOpenResult HandleForwardOpen(CommandItems response, ForwardOpenOptions options)

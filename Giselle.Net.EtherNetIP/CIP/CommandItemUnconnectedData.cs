@@ -60,14 +60,14 @@ namespace Giselle.Net.EtherNetIP.CIP
         {
             base.ReadHeader(processor);
 
-            this.Path = processor.ReadEPath();
+            this.Path = new EPath(processor);
         }
 
         protected override void WriteHeader(DataProcessor processor)
         {
             base.WriteHeader(processor);
 
-            processor.WriteEPath(this.Path);
+            this.Path.Write(processor);
         }
 
     }

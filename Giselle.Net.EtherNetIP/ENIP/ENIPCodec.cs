@@ -31,7 +31,7 @@ namespace Giselle.Net.EtherNetIP.ENIP
             using (var ms = new MemoryStream())
             {
                 var processor = CreateDataProcessor(ms);
-                processor.WriteEncapsulation(request);
+                request.Write(processor);
 
                 var bytes = ms.ToArray();
                 stream.Write(bytes, 0, bytes.Length);
@@ -41,7 +41,7 @@ namespace Giselle.Net.EtherNetIP.ENIP
 
         public Encapsulation ReadEncapsulation(Stream stream)
         {
-            return CreateDataProcessor(stream).ReadEncapsulation();
+            return new Encapsulation(CreateDataProcessor(stream));
         }
 
         public Encapsulation ExchangeEncapsulation(Stream stream, Encapsulation request)
@@ -67,7 +67,7 @@ namespace Giselle.Net.EtherNetIP.ENIP
             return encapsulation;
         }
 
-        public SendRRData ReadCommandData(Encapsulation response, bool isRequest) => response.DataProcessor.ReadCommandData(isRequest);
+        public SendRRData ReadCommandData(Encapsulation response, bool isRequest) => new SendRRData(response.DataProcessor, isRequest);
 
         public Encapsulation CreateRegisterSession()
         {

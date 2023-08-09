@@ -73,7 +73,6 @@
     <Compile Include="CIP\KnownClassAttributeID.cs" />
     <Compile Include="CIP\ServiceCode.cs" />
     <Compile Include="DataProcessor.cs" />
-    <Compile Include="DataProcessorExtensions.cs" />
     <Compile Include="ENIP\ENIPSimpleClient.cs" />
     <Compile Include="IPAddressUtils.cs" />
     <Compile Include="ObjectsExtensions.cs" />

@@ -38,7 +38,7 @@ namespace Giselle.Net.EtherNetIP
 
         public static int ToIPv4Address(this IPAddress address, bool isBigEndian = true)
         {
-            var bytes = address.GetAddressBytes();
+            var bytes = address.MapToIPv4().GetAddressBytes();
             int value = 0;
 
             if (isBigEndian == true)

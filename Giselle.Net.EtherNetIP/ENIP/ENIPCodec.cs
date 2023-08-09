@@ -123,7 +123,13 @@ namespace Giselle.Net.EtherNetIP.ENIP
 
         public SendRRData CreateSendRRData(params CommandItem[] items) => this.CreateSendRRData((IEnumerable<CommandItem>)items);
 
-        public SendRRData CreateSendRRData(IEnumerable<CommandItem> items) => new SendRRData(items) { Timeout = this.SendRRDataTimeout };
+        public SendRRData CreateSendRRData(IEnumerable<CommandItem> items)
+        {
+            var sendRRData = new SendRRData() { Timeout = this.SendRRDataTimeout };
+            sendRRData.Items.Add(new CommandItemNull());
+            sendRRData.Items.AddRange(items);
+            return sendRRData;
+        }
 
         public CommandItems ExchangeSendRRData(Stream stream, params CommandItem[] requests)
         {

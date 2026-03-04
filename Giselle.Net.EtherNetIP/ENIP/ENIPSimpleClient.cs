@@ -139,6 +139,10 @@ namespace Giselle.Net.EtherNetIP.ENIP
 
         public uint SessionId => this.Codec.SessionID;
 
+        public bool ImplicitRun { get => this.Codec.CIPCodec.ImplicitRun; set => this.Codec.CIPCodec.ImplicitRun = value; }
+        public bool ImplicitCOO { get => this.Codec.CIPCodec.ImplicitCOO; set => this.Codec.CIPCodec.ImplicitCOO = value; }
+        public byte ImplicitROO { get => this.Codec.CIPCodec.ImplicitROO; set => this.Codec.CIPCodec.ImplicitROO = value; }
+
         /// <summary>
         /// 
         /// </summary>
@@ -153,32 +157,13 @@ namespace Giselle.Net.EtherNetIP.ENIP
             var result = this.Codec.ForwardOpen(this.TcpStream, options);
             this.LastForwardOpenResult = result;
 
-            this.UdpClient = this.CreateImplictMessagingClient(result);
+            this.UdpClient = this.Codec.CreateImplictMessagingClient(result);
             this.ImplicitReceiveThread = new Thread(this.RunImplicitReceive);
             this.ImplicitReceiveThread.Start();
             this.ImplicitSendThread = new Thread(this.RunImplicitSend);
             this.ImplicitSendThread.Start();
 
             return result;
-        }
-
-        private UdpClient CreateImplictMessagingClient(ForwardOpenResult openResult)
-        {
-            var udpClient = new UdpClient();
-            var options = openResult.Options;
-            udpClient.Client.Bind(new IPEndPoint(options.LocalAddress, openResult.Options.T_O_UDPPort));
-
-            if (openResult.Options.O_T_Assembly.ConnectionType == ConnectionType.Multicast)
-            {
-                udpClient.JoinMulticastGroup(openResult.O_T_Address.Address, options.LocalAddress);
-            }
-
-            if (openResult.Options.T_O_Assembly.ConnectionType == ConnectionType.Multicast)
-            {
-                udpClient.JoinMulticastGroup(openResult.T_O_Address.Address, options.LocalAddress);
-            }
-
-            return udpClient;
         }
 
         private void RunImplicitReceive()

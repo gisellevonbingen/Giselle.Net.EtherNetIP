@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using Giselle.Net.EtherNetIP.CIP;
 
@@ -178,6 +179,25 @@ namespace Giselle.Net.EtherNetIP.ENIP
         public ForwardCloseResult ForwardClose(Stream stream, ForwardCloseOptions options) => this.ExchangeSendRRData(stream,
             response => this.CIPCodec.HandleForwardClose(response, options),
             this.CIPCodec.CreateForwardClose(options));
+
+        public UdpClient CreateImplictMessagingClient(ForwardOpenResult openResult)
+        {
+            var udpClient = new UdpClient();
+            var options = openResult.Options;
+            udpClient.Client.Bind(new IPEndPoint(options.LocalAddress, openResult.Options.T_O_UDPPort));
+
+            if (openResult.Options.O_T_Assembly.ConnectionType == ConnectionType.Multicast)
+            {
+                udpClient.JoinMulticastGroup(openResult.O_T_Address.Address, options.LocalAddress);
+            }
+
+            if (openResult.Options.T_O_Assembly.ConnectionType == ConnectionType.Multicast)
+            {
+                udpClient.JoinMulticastGroup(openResult.T_O_Address.Address, options.LocalAddress);
+            }
+
+            return udpClient;
+        }
 
     }
 

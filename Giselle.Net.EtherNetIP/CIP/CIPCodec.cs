@@ -17,10 +17,14 @@ namespace Giselle.Net.EtherNetIP.CIP
         public static DataProcessor CreateDataProcessor(Stream baseStream) => new DataProcessor(baseStream) { IsLittleEndian = true };
 
         public Random Random { get; set; }
+        public bool ImplicitRun { get; set; }
+        public bool ImplicitCOO { get; set; }
+        public byte ImplicitROO { get; set; }
 
         public CIPCodec()
         {
             this.Random = new Random();
+            this.ImplicitRun = true;
         }
 
         public CommandItemUnconnectedDataRequest CreateGetAttribute(AttributePath path)
@@ -234,6 +238,7 @@ namespace Giselle.Net.EtherNetIP.CIP
 
                     if (realTimeFormat != RealTimeFormat.Heartbeat)
                     {
+                        // SequenceCount
                         processor.ReadUShort();
                     }
                     else
@@ -243,7 +248,10 @@ namespace Giselle.Net.EtherNetIP.CIP
 
                     if (realTimeFormat == RealTimeFormat.Header32Bit)
                     {
-                        processor.ReadUInt();
+                        var header = processor.ReadUInt();
+                        this.ImplicitRun = (header & 0x01) > 0;
+                        this.ImplicitCOO = (header & 0x02) > 0;
+                        this.ImplicitROO = (byte)((header >> 2) & 0x03);
                     }
 
                     processor.ReadBytes(buffer);
@@ -270,7 +278,11 @@ namespace Giselle.Net.EtherNetIP.CIP
 
             if (realTimeFormat == RealTimeFormat.Header32Bit)
             {
-                processor.WriteUInt(1);
+                var header = 0;
+                header |= this.ImplicitRun ? 0x01 : 0;
+                header |= this.ImplicitCOO ? 0x02 : 0;
+                header |= (this.ImplicitROO & 0x03) << 2;
+                processor.WriteInt(header);
             }
 
             processor.WriteBytes(buffer);

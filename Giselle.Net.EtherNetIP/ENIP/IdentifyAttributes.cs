@@ -10,19 +10,14 @@ namespace Giselle.Net.EtherNetIP.ENIP
     {
         public const uint ClassID = KnownClassID.Identify;
 
-        public ENIPCodec Parent { get; private set; }
-        public Stream BaseStream { get; private set; }
+        public Func<AttributePath, DataProcessor> GetAttribute { get; private set; }
 
-        public IdentifyAttributes(ENIPCodec parent, Stream stream)
+        public IdentifyAttributes(Func<AttributePath, DataProcessor> getAttribute)
         {
-            this.Parent = parent;
-            this.BaseStream = stream;
+            this.GetAttribute = getAttribute;
         }
 
-        public DataProcessor Read(uint attributeID = 0)
-        {
-            return this.Parent.GetAttribute(this.BaseStream, new AttributePath(ClassID, 1, attributeID));
-        }
+        public DataProcessor Read(uint attributeID = 0) => this.GetAttribute(new AttributePath(ClassID, 1, attributeID));
 
         public ushort VenderID => this.Read(KnownIdentifyAttributeID.VenderID).ReadUShort();
 
@@ -47,7 +42,7 @@ namespace Giselle.Net.EtherNetIP.ENIP
 
         }
 
-        public ClassAttributes ClassAttributes => this.Parent.GetClassAttributes(this.BaseStream, ClassID);
+        public ClassAttributes ClassAttributes => new ClassAttributes(this.GetAttribute, ClassID);
     }
 
 }

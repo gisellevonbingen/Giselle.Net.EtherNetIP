@@ -8,21 +8,16 @@ namespace Giselle.Net.EtherNetIP.ENIP
 {
     public class ClassAttributes
     {
-        public ENIPCodec Parent { get; private set; }
-        public Stream BaseStream { get; private set; }
+        public Func<AttributePath, DataProcessor> GetAttribute { get; private set; }
         public uint ClassId { get; }
 
-        public ClassAttributes(ENIPCodec parent, Stream stream, uint classId)
+        public ClassAttributes(Func<AttributePath, DataProcessor> getAttribute, uint classId)
         {
-            this.Parent = parent;
-            this.BaseStream = stream;
+            this.GetAttribute = getAttribute;
             this.ClassId = classId;
         }
 
-        public DataProcessor Read(uint attributeID = 0)
-        {
-            return this.Parent.GetAttribute(this.BaseStream, new AttributePath(this.ClassId, 0, attributeID));
-        }
+        public DataProcessor Read(uint attributeID = 0) => this.GetAttribute(new AttributePath(this.ClassId, 0, attributeID));
 
         public ushort Revision => this.Read(KnownClassAttributeID.Revision).ReadUShort();
 

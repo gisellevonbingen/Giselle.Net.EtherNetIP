@@ -8,47 +8,15 @@ using Giselle.Net.EtherNetIP.CIP;
 
 namespace Giselle.Net.EtherNetIP.ENIP
 {
-    public class ENIPCodec
+    public class ENIPCodec : CIPCodec
     {
-        public static DataProcessor CreateDataProcessor(Stream baseStream) => CIPCodec.CreateDataProcessor(baseStream);
-
-        public CIPCodec CIPCodec { get; set; }
         public uint SessionID { get; set; }
         public ushort SendRRDataTimeout { get; set; }
 
         public ENIPCodec()
         {
-            this.CIPCodec = new CIPCodec();
             this.SessionID = 0;
             this.SendRRDataTimeout = 0;
-        }
-
-        public IdentifyAttributes GetIdentifyAttributes(Stream stream) => new IdentifyAttributes(this, stream);
-
-        public ClassAttributes GetClassAttributes(Stream stream, uint classId) => new ClassAttributes(this, stream, classId);
-
-        public void WriteEncapsulation(Stream stream, Encapsulation request)
-        {
-            using (var ms = new MemoryStream())
-            {
-                var processor = CreateDataProcessor(ms);
-                request.Write(processor);
-
-                var bytes = ms.ToArray();
-                stream.Write(bytes, 0, bytes.Length);
-            }
-
-        }
-
-        public Encapsulation ReadEncapsulation(Stream stream)
-        {
-            return new Encapsulation(CreateDataProcessor(stream));
-        }
-
-        public Encapsulation ExchangeEncapsulation(Stream stream, Encapsulation request)
-        {
-            this.WriteEncapsulation(stream, request);
-            return this.ReadEncapsulation(stream);
         }
 
         public Encapsulation CreateEncapsulation()
@@ -79,23 +47,6 @@ namespace Giselle.Net.EtherNetIP.ENIP
             return request;
         }
 
-        public uint RegisterSession(Stream stream)
-        {
-            var sessionId = this.SessionID;
-
-            if (sessionId > 0)
-            {
-                return sessionId;
-            }
-            else
-            {
-                var request = this.CreateRegisterSession();
-                var response = this.ExchangeEncapsulation(stream, request);
-                return this.HandleRegisterSession(response);
-            }
-
-        }
-
         public uint HandleRegisterSession(Encapsulation response)
         {
             this.SessionID = response.SessionID;
@@ -114,14 +65,6 @@ namespace Giselle.Net.EtherNetIP.ENIP
             this.SessionID = 0;
         }
 
-        public void UnRegisterSession(Stream stream)
-        {
-            var request = this.CreateUnRegisterSession();
-            this.WriteEncapsulation(stream, request);
-
-            this.HandleUnRegisterSession();
-        }
-
         public SendRRData CreateSendRRData(params CommandItem[] items) => this.CreateSendRRData((IEnumerable<CommandItem>)items);
 
         public SendRRData CreateSendRRData(IEnumerable<CommandItem> items)
@@ -132,71 +75,27 @@ namespace Giselle.Net.EtherNetIP.ENIP
             return sendRRData;
         }
 
-        public CommandItems ExchangeSendRRData(Stream stream, params CommandItem[] requests)
-        {
-            var req = this.CreateSendRRData(requests);
-            return this.ExchangeSendRRData(stream, req);
-        }
-
-        public CommandItems ExchangeSendRRData(Stream stream, IEnumerable<CommandItem> requests)
-        {
-            var req = this.CreateSendRRData(requests);
-            return this.ExchangeSendRRData(stream, req);
-        }
-
-        public CommandItems ExchangeSendRRData(Stream stream, SendRRData request)
-        {
-            var req = this.CreateEncapsulation(request);
-            var res = this.ExchangeEncapsulation(stream, req);
-            return this.ReadCommandData(res, false).Items;
-        }
-
-        private RES ExchangeSendRRData<RES>(Stream stream, Func<CommandItems, RES> responseFunc, params CommandItem[] requests)
-        {
-            var response = this.ExchangeSendRRData(stream, requests);
-            return responseFunc(response);
-        }
-
-        private RES ExchangeSendRRData<RES>(Stream stream, Func<CommandItems, RES> responseFunc, IEnumerable<CommandItem> requests)
-        {
-            var response = this.ExchangeSendRRData(stream, requests);
-            return responseFunc(response);
-        }
-
-        public DataProcessor GetAttribute(Stream stream, AttributePath path) => this.ExchangeSendRRData(stream,
-            this.CIPCodec.HandleGetAttribute,
-            this.CIPCodec.CreateGetAttribute(path));
-
-
-        public byte SetAttribute(Stream stream, AttributePath path, byte[] values) => this.ExchangeSendRRData(stream,
-            this.CIPCodec.HandleSetAttribute,
-            this.CIPCodec.CreateSetAttribute(path, values));
-
-        public ForwardOpenResult ForwardOpen(Stream stream, ForwardOpenOptions options) => this.ExchangeSendRRData(stream,
-            response => this.CIPCodec.HandleForwardOpen(response, options),
-            this.CIPCodec.CreateForwardOpen(options));
-
-        public ForwardCloseResult ForwardClose(Stream stream, ForwardCloseOptions options) => this.ExchangeSendRRData(stream,
-            response => this.CIPCodec.HandleForwardClose(response, options),
-            this.CIPCodec.CreateForwardClose(options));
-
-        public UdpClient CreateImplictMessagingClient(ForwardOpenResult openResult)
+        public UdpClient CreateImplictMessagingClient(ForwardOpenOptions options, ForwardOpenResult result, IPAddress localAddress)
         {
             var udpClient = new UdpClient();
-            var options = openResult.Options;
-            udpClient.Client.Bind(new IPEndPoint(options.LocalAddress, openResult.Options.T_O_UDPPort));
-
-            if (openResult.Options.O_T_Assembly.ConnectionType == ConnectionType.Multicast)
-            {
-                udpClient.JoinMulticastGroup(openResult.O_T_Address.Address, options.LocalAddress);
-            }
-
-            if (openResult.Options.T_O_Assembly.ConnectionType == ConnectionType.Multicast)
-            {
-                udpClient.JoinMulticastGroup(openResult.T_O_Address.Address, options.LocalAddress);
-            }
+            udpClient.Client.Bind(new IPEndPoint(localAddress, options.T_O_UDPPort));
+            JoinMulticastGroup(udpClient, options, result, localAddress);
 
             return udpClient;
+        }
+
+        public static void JoinMulticastGroup(UdpClient udpClient, ForwardOpenOptions options, ForwardOpenResult result, IPAddress localAddress)
+        {
+            if (options.O_T_Assembly.ConnectionType == ConnectionType.Multicast)
+            {
+                udpClient.JoinMulticastGroup(result.O_T_Address.Address, localAddress);
+            }
+
+            if (options.T_O_Assembly.ConnectionType == ConnectionType.Multicast)
+            {
+                udpClient.JoinMulticastGroup(result.T_O_Address.Address, localAddress);
+            }
+
         }
 
     }

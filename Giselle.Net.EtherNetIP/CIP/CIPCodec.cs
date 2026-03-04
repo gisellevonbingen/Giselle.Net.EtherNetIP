@@ -56,7 +56,7 @@ namespace Giselle.Net.EtherNetIP.CIP
             return response.Find<CommandItemUnconnectedDataResponse>().Error;
         }
 
-        public IEnumerable<CommandItem> CreateForwardOpen(ForwardOpenOptions options)
+        public IEnumerable<CommandItem> CreateForwardOpen(ForwardOpenOptions options, IPAddress localAddress)
         {
             var udRequest = new CommandItemUnconnectedDataRequest();
             udRequest.ServiceCode = ServiceCode.ForwardOpen;
@@ -121,7 +121,7 @@ namespace Giselle.Net.EtherNetIP.CIP
 
             if (options.T_O_Assembly.ConnectionType == ConnectionType.Multicast)
             {
-                toEndPoint.EndPoint.Address = ((int)GetMulticastAddress((uint)options.LocalAddress.ToIPv4Address())).ToIPv4Address(true);
+                toEndPoint.EndPoint.Address = ((int)GetMulticastAddress((uint)localAddress.ToIPv4Address())).ToIPv4Address(true);
             }
             else
             {
@@ -130,9 +130,9 @@ namespace Giselle.Net.EtherNetIP.CIP
             yield return toEndPoint;
         }
 
-        public ForwardOpenResult HandleForwardOpen(CommandItems response, ForwardOpenOptions options)
+        public ForwardOpenResult HandleForwardOpen(CommandItems response)
         {
-            var result = new ForwardOpenResult() { Options = options };
+            var result = new ForwardOpenResult();
 
             foreach (var item in response)
             {
@@ -205,9 +205,9 @@ namespace Giselle.Net.EtherNetIP.CIP
             return udRequest;
         }
 
-        public ForwardCloseResult HandleForwardClose(CommandItems response, ForwardCloseOptions options)
+        public ForwardCloseResult HandleForwardClose(CommandItems response)
         {
-            var result = new ForwardCloseResult() { Options = options };
+            var result = new ForwardCloseResult();
 
             foreach (var item in response)
             {

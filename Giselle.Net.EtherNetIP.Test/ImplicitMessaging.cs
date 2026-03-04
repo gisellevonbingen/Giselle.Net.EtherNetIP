@@ -113,7 +113,7 @@ namespace Giselle.Net.EtherNetIP.Test
 
         private static void FillSendingBytes(ENIPSimpleClient client, byte[] bytes)
         {
-            var dwords = client.LastForwardOpenResult.Options.O_T_Assembly.Length / 4;
+            var dwords = client.LastForwardOpenOptions.O_T_Assembly.Length / 4;
             var filling = BitConverter.GetBytes(++FillingCycle);
 
             for (var i = 0; i < dwords; i++)

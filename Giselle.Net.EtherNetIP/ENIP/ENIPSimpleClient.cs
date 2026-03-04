@@ -19,11 +19,16 @@ namespace Giselle.Net.EtherNetIP.ENIP
         private readonly TcpClient TcpClient;
 
         private Stream TcpStream = null;
+        private DataProcessor TcpProcessor = null;
         private UdpClient UdpClient = null;
         private Thread ImplicitReceiveThread = null;
         private Thread ImplicitSendThread = null;
 
         public bool Connected { get; private set; } = false;
+        /// <summary>
+        /// Nullable
+        /// </summary>
+        public ForwardOpenOptions LastForwardOpenOptions { get; private set; } = null;
         /// <summary>
         /// Nullable
         /// </summary>
@@ -47,23 +52,12 @@ namespace Giselle.Net.EtherNetIP.ENIP
 
         public IdentifyAttributes GetIdentifyAttributes()
         {
-            this.EnsureConnected();
-            return this.Codec.GetIdentifyAttributes(this.TcpStream);
+            return new IdentifyAttributes(this.GetAttribute);
         }
 
-        public ClassAttributes GetIdentifyAttributes(uint classId)
+        public ClassAttributes GetClassAttributes(uint classId)
         {
-            this.EnsureConnected();
-            return this.Codec.GetClassAttributes(this.TcpStream, classId);
-        }
-
-        public void EnsureConnected()
-        {
-            if (this.Connected == false)
-            {
-                throw new IOException("Not connected");
-            }
-
+            return new ClassAttributes(this.GetAttribute, classId);
         }
 
         public void Connect(IPAddress hostname, int port = TcpPort) => this.Connect(new IPEndPoint(hostname, port));
@@ -74,7 +68,9 @@ namespace Giselle.Net.EtherNetIP.ENIP
             {
                 this.TcpClient.Connect(hostname);
                 this.TcpStream = this.TcpClient.GetStream();
-                this.Codec.RegisterSession(this.TcpStream);
+                this.TcpProcessor = CIPCodec.CreateDataProcessor(this.TcpStream);
+                this.RegisterSession();
+
                 this.Connected = true;
             }
             catch (Exception)
@@ -90,9 +86,77 @@ namespace Giselle.Net.EtherNetIP.ENIP
             this.ForwardClose();
 
             this.Connected = false;
-            this.Codec.UnRegisterSession(this.TcpStream);
+            this.UnRegisterSession();
             this.TcpClient.DisposeQuietly();
             this.TcpStream.DisposeQuietly();
+        }
+
+        private void WriteEncapsulation(Encapsulation request)
+        {
+            if (this.Connected == false)
+            {
+                throw new IOException("Not connected");
+            }
+
+            using (var ms = new MemoryStream())
+            {
+                request.Write(CIPCodec.CreateDataProcessor(ms));
+                this.TcpProcessor.WriteBytes(ms.ToArray());
+            }
+
+        }
+
+        private Encapsulation ReadEncapsulation()
+        {
+            return new Encapsulation(this.TcpProcessor);
+        }
+
+        public Encapsulation ExchangeEncapsulation(Encapsulation request)
+        {
+            this.WriteEncapsulation(request);
+            return this.ReadEncapsulation();
+        }
+
+        public CommandItems ExchangeSendRRData(params CommandItem[] requests)
+        {
+            return this.ExchangeSendRRData(this.Codec.CreateSendRRData(requests));
+        }
+
+        public CommandItems ExchangeSendRRData(IEnumerable<CommandItem> requests)
+        {
+            return this.ExchangeSendRRData(this.Codec.CreateSendRRData(requests));
+        }
+
+        public CommandItems ExchangeSendRRData(SendRRData request)
+        {
+            var requestEncapsulation = this.Codec.CreateEncapsulation(request);
+            var responseEncapsulation = this.ExchangeEncapsulation(requestEncapsulation);
+
+            return this.Codec.ReadCommandData(responseEncapsulation, false).Items;
+        }
+
+        public RES ExchangeSendRRData<RES>(Func<CommandItems, RES> responseFunc, params CommandItem[] requests)
+        {
+            return responseFunc(this.ExchangeSendRRData(requests));
+        }
+
+        public RES ExchangeSendRRData<RES>(Func<CommandItems, RES> responseFunc, IEnumerable<CommandItem> requests)
+        {
+            return responseFunc(this.ExchangeSendRRData(requests));
+        }
+
+        public uint RegisterSession()
+        {
+            var request = this.Codec.CreateRegisterSession();
+            var response = this.ExchangeEncapsulation(request);
+            return this.Codec.HandleRegisterSession(response);
+        }
+
+        public void UnRegisterSession()
+        {
+            var request = this.Codec.CreateUnRegisterSession();
+            this.WriteEncapsulation(request);
+            this.Codec.HandleUnRegisterSession();
         }
 
         public DataProcessor GetAseemblyData(uint instanceId) => this.GetAttribute(new AttributePath(KnownClassID.Assembly, instanceId, KnownAssembyAttributeID.Data));
@@ -105,7 +169,7 @@ namespace Giselle.Net.EtherNetIP.ENIP
         {
             using (var ms = new MemoryStream())
             {
-                bytesMaker(ENIPCodec.CreateDataProcessor(ms));
+                bytesMaker(CIPCodec.CreateDataProcessor(ms));
                 this.SetAssemblyData(instanceId, ms.ToArray());
             }
 
@@ -113,63 +177,55 @@ namespace Giselle.Net.EtherNetIP.ENIP
 
         public DataProcessor GetAttribute(AttributePath path)
         {
-            this.EnsureConnected();
-            return this.Codec.GetAttribute(this.TcpStream, path);
+            return this.ExchangeSendRRData(this.Codec.HandleGetAttribute, this.Codec.CreateGetAttribute(path));
         }
 
         public byte SetAttribute(AttributePath path, byte[] bytes)
         {
-            this.EnsureConnected();
-            return this.Codec.SetAttribute(this.TcpStream, path, bytes);
+            return this.ExchangeSendRRData(this.Codec.HandleSetAttribute, this.Codec.CreateSetAttribute(path, bytes));
         }
 
         public byte SetAttribute(AttributePath path, Action<DataProcessor> bytesMaker)
         {
-            this.EnsureConnected();
-
             using (var ms = new MemoryStream())
             {
-                bytesMaker(ENIPCodec.CreateDataProcessor(ms));
-                return this.Codec.SetAttribute(this.TcpStream, path, ms.ToArray());
+                bytesMaker(CIPCodec.CreateDataProcessor(ms));
+                return this.SetAttribute(path, ms.ToArray());
             }
 
         }
 
-        public Random Random { get => this.Codec.CIPCodec.Random; set => this.Codec.CIPCodec.Random = value; }
+        public Random Random { get => this.Codec.Random; set => this.Codec.Random = value; }
 
         public uint SessionId => this.Codec.SessionID;
 
-        public bool ImplicitRun { get => this.Codec.CIPCodec.ImplicitRun; set => this.Codec.CIPCodec.ImplicitRun = value; }
-        public bool ImplicitCOO { get => this.Codec.CIPCodec.ImplicitCOO; set => this.Codec.CIPCodec.ImplicitCOO = value; }
-        public byte ImplicitROO { get => this.Codec.CIPCodec.ImplicitROO; set => this.Codec.CIPCodec.ImplicitROO = value; }
+        public bool ImplicitRun { get => this.Codec.ImplicitRun; set => this.Codec.ImplicitRun = value; }
+        public bool ImplicitCOO { get => this.Codec.ImplicitCOO; set => this.Codec.ImplicitCOO = value; }
+        public byte ImplicitROO { get => this.Codec.ImplicitROO; set => this.Codec.ImplicitROO = value; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="options">Set LocalAddress to connecting LocalEndPoint</param>
-        /// <returns></returns>
         public ForwardOpenResult ForwardOpen(ForwardOpenOptions options)
         {
-            this.EnsureConnected();
             this.ForwardClose();
 
-            options.LocalAddress = ((IPEndPoint)this.TcpClient.Client.LocalEndPoint).Address;
-            var result = this.Codec.ForwardOpen(this.TcpStream, options);
-            this.LastForwardOpenResult = result;
+            options = new ForwardOpenOptions(options);
+            var localAddress = ((IPEndPoint)this.TcpClient.Client.LocalEndPoint).Address;
 
-            this.UdpClient = this.Codec.CreateImplictMessagingClient(result);
-            this.ImplicitReceiveThread = new Thread(this.RunImplicitReceive);
+            var result = this.ExchangeSendRRData(this.Codec.HandleForwardOpen, this.Codec.CreateForwardOpen(options, localAddress));
+            this.LastForwardOpenOptions = new ForwardOpenOptions(options);
+            this.LastForwardOpenResult = new ForwardOpenResult(result);
+
+            this.UdpClient = this.Codec.CreateImplictMessagingClient(options, result, localAddress);
+            this.ImplicitReceiveThread = new Thread(() => this.RunImplicitReceive(options));
             this.ImplicitReceiveThread.Start();
-            this.ImplicitSendThread = new Thread(this.RunImplicitSend);
+            this.ImplicitSendThread = new Thread(() => this.RunImplicitSend(options, result.O_T_ConnectionID));
             this.ImplicitSendThread.Start();
 
-            return result;
+            return this.LastForwardOpenResult;
         }
 
-        private void RunImplicitReceive()
+        private void RunImplicitReceive(ForwardOpenOptions options)
         {
             var udpClient = this.UdpClient;
-            var options = this.LastForwardOpenResult.Options;
 
             try
             {
@@ -180,10 +236,10 @@ namespace Giselle.Net.EtherNetIP.ENIP
 
                     using (var ms = new MemoryStream(bytes))
                     {
-                        var items = new CommandItems(ENIPCodec.CreateDataProcessor(ms), false);
+                        var items = new CommandItems(CIPCodec.CreateDataProcessor(ms), false);
 
                         var data = new byte[options.T_O_Assembly.Length];
-                        this.Codec.CIPCodec.HandleImplicitTransmission(options.T_O_Assembly.RealTimeFormat, items, data);
+                        this.Codec.HandleImplicitTransmission(options.T_O_Assembly.RealTimeFormat, items, data);
                         this.OnImplicitMessageReceived(data);
                     }
 
@@ -201,11 +257,9 @@ namespace Giselle.Net.EtherNetIP.ENIP
 
         }
 
-        private void RunImplicitSend()
+        private void RunImplicitSend(ForwardOpenOptions options, uint o_t_ConnectionID)
         {
             var udpClient = this.UdpClient;
-            var result = this.LastForwardOpenResult;
-            var options = result.Options;
             var targetEndPoint = new IPEndPoint(((IPEndPoint)this.TcpClient.Client.RemoteEndPoint).Address, options.O_T_UDPPort);
 
             try
@@ -215,17 +269,17 @@ namespace Giselle.Net.EtherNetIP.ENIP
                     var item = new CommandItemSequencedAddress()
                     {
                         SequenceCount = i,
-                        ConnectionID = result.O_T_ConnectionID,
+                        ConnectionID = o_t_ConnectionID,
                     };
 
                     var data = new byte[options.O_T_Assembly.Length];
                     this.OnImplicitMessageSending(data);
 
-                    var items = this.Codec.CIPCodec.CreateImplicitTransmission(options.O_T_Assembly.RealTimeFormat, item, data);
+                    var items = this.Codec.CreateImplicitTransmission(options.O_T_Assembly.RealTimeFormat, item, data);
 
                     using (var ms = new MemoryStream())
                     {
-                        items.Write(ENIPCodec.CreateDataProcessor(ms));
+                        items.Write(CIPCodec.CreateDataProcessor(ms));
                         udpClient.Send(ms.ToArray(), (int)ms.Length, targetEndPoint);
                     }
 
@@ -254,9 +308,10 @@ namespace Giselle.Net.EtherNetIP.ENIP
             this.UdpClient.DisposeQuietly();
             this.ImplicitReceiveThread.InterruptQuietly();
             this.ImplicitSendThread.InterruptQuietly();
-            this.EnsureConnected();
 
-            this.Codec.ForwardClose(this.TcpStream, new ForwardCloseOptions(this.LastForwardOpenResult));
+            var options = new ForwardCloseOptions(this.LastForwardOpenOptions, this.LastForwardOpenResult);
+            this.ExchangeSendRRData(this.Codec.HandleForwardClose, this.Codec.CreateForwardClose(options));
+
             this.LastForwardOpenResult = null;
         }
 

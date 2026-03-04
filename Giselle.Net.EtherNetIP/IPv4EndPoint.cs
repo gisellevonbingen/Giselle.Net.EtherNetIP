@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 
@@ -17,6 +18,14 @@ namespace Giselle.Net.EtherNetIP
         {
             this.Address = IPAddress.Any;
             this.Reserved = new byte[8];
+        }
+
+        public IPv4EndPoint(IPv4EndPoint other)
+        {
+            this.Family = other.Family;
+            this.Port = other.Port;
+            this.Address = new IPAddress(other.Address.GetAddressBytes(), other.Address.ScopeId);
+            this.Reserved = other.Reserved.ToArray();
         }
 
         public void Read(Stream stream)

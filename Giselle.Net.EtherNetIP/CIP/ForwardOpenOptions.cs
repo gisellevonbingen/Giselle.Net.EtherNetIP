@@ -27,7 +27,6 @@ namespace Giselle.Net.EtherNetIP.CIP
         /// Not Supported Yet, Fix Default Value (2222)
         /// </summary>
         public ushort T_O_UDPPort { get; set; }
-        public IPAddress LocalAddress { get; set; }
 
         public ForwardOpenOptions()
         {
@@ -36,7 +35,6 @@ namespace Giselle.Net.EtherNetIP.CIP
 
             this.O_T_UDPPort = 2222;
             this.T_O_UDPPort = 2222;
-            this.LocalAddress = IPAddress.Loopback;
         }
 
         public ForwardOpenOptions(ForwardOpenOptions other)
@@ -47,7 +45,6 @@ namespace Giselle.Net.EtherNetIP.CIP
 
             this.O_T_UDPPort = other.O_T_UDPPort;
             this.T_O_UDPPort = other.T_O_UDPPort;
-            this.LocalAddress = other.LocalAddress;
         }
 
     }

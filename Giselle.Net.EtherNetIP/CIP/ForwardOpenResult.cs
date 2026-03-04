@@ -6,8 +6,6 @@ namespace Giselle.Net.EtherNetIP.CIP
 {
     public class ForwardOpenResult
     {
-        public ForwardOpenOptions Options { get; set; }
-
         public ushort Error { get; set; }
         public ExtendedStatusError ExtendedStatus { get; set; }
         public ushort ConnectionSerialNumber { get; set; }
@@ -20,6 +18,18 @@ namespace Giselle.Net.EtherNetIP.CIP
         public ForwardOpenResult()
         {
 
+        }
+
+        public ForwardOpenResult(ForwardOpenResult other)
+        {
+            this.Error = other.Error;
+            this.ExtendedStatus = other.ExtendedStatus;
+            this.ConnectionSerialNumber = other.ConnectionSerialNumber;
+
+            this.O_T_Address = other.O_T_Address == null ? null : new IPv4EndPoint(other.O_T_Address);
+            this.T_O_Address = other.T_O_Address == null ? null : new IPv4EndPoint(other.T_O_Address);
+            this.O_T_ConnectionID = other.O_T_ConnectionID;
+            this.T_O_ConnectionID = other.T_O_ConnectionID;
         }
 
     }

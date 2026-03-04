@@ -28,12 +28,9 @@ namespace Giselle.Net.EtherNetIP.CIP
             this.T_O_InstanceID = other.T_O_InstanceID;
         }
 
-        public ForwardCloseOptions(ForwardOpenResult openResult)
-            : base(openResult.Options)
+        public ForwardCloseOptions(ForwardOpenOptions openOptions, ForwardOpenResult openResult)
         {
             this.ConnectionSerialNumber = openResult.ConnectionSerialNumber;
-
-            var openOptions = openResult.Options;
 
             this.O_T_ConnectionType = openOptions.O_T_Assembly.ConnectionType;
             this.O_T_InstanceID = openOptions.O_T_Assembly.InstanceID;

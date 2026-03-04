@@ -22,15 +22,15 @@ namespace Giselle.Net.EtherNetIP.CIP
 
         public static byte ToFormatType(byte typeAssembly) => (byte)((typeAssembly & FormatTypeMask) >> FormatTypeOffset);
 
-        public static EPathSegmentLogical FromClassID(uint value) => new EPathSegmentLogical(KnownEPathLogicalSegmentType.ClassID, value);
+        public static EPathSegmentLogical FromClassId(uint value) => new EPathSegmentLogical(KnownEPathLogicalSegmentType.ClassId, value);
 
-        public static EPathSegmentLogical FromInstanceID(uint value) => new EPathSegmentLogical(KnownEPathLogicalSegmentType.InstanceID, value);
+        public static EPathSegmentLogical FromInstanceId(uint value) => new EPathSegmentLogical(KnownEPathLogicalSegmentType.InstanceId, value);
 
-        public static EPathSegmentLogical FromElementID(uint value) => new EPathSegmentLogical(KnownEPathLogicalSegmentType.ElementID, value);
+        public static EPathSegmentLogical FromElementId(uint value) => new EPathSegmentLogical(KnownEPathLogicalSegmentType.ElementId, value);
 
-        public static EPathSegmentLogical FromConnectionPointID(uint value) => new EPathSegmentLogical(KnownEPathLogicalSegmentType.ConnectionPointID, value);
+        public static EPathSegmentLogical FromConnectionPointId(uint value) => new EPathSegmentLogical(KnownEPathLogicalSegmentType.ConnectionPointId, value);
 
-        public static EPathSegmentLogical FromAttributeID(uint value) => new EPathSegmentLogical(KnownEPathLogicalSegmentType.AttributeID, value);
+        public static EPathSegmentLogical FromAttributeId(uint value) => new EPathSegmentLogical(KnownEPathLogicalSegmentType.AttributeId, value);
 
         public byte LogicalType { get; set; }
         public uint Value { get; set; }

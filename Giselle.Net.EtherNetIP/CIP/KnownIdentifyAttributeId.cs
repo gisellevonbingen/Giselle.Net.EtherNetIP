@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Giselle.Net.EtherNetIP.CIP
 {
-    public static class KnownIdentifyAttributeID
+    public static class KnownIdentifyAttributeId
     {
-        public const uint VenderID = 1;
+        public const uint VenderId = 1;
         public const uint DeviceType = 2;
         public const uint ProductCode = 3;
         public const uint Revision = 4;

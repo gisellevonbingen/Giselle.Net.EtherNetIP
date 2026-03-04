@@ -12,8 +12,8 @@ namespace Giselle.Net.EtherNetIP.CIP
 
         public IPv4EndPoint O_T_Address { get; set; }
         public IPv4EndPoint T_O_Address { get; set; }
-        public uint O_T_ConnectionID { get; set; }
-        public uint T_O_ConnectionID { get; set; }
+        public uint O_T_ConnectionId { get; set; }
+        public uint T_O_ConnectionId { get; set; }
 
         public ForwardOpenResult()
         {
@@ -28,8 +28,8 @@ namespace Giselle.Net.EtherNetIP.CIP
 
             this.O_T_Address = other.O_T_Address == null ? null : new IPv4EndPoint(other.O_T_Address);
             this.T_O_Address = other.T_O_Address == null ? null : new IPv4EndPoint(other.T_O_Address);
-            this.O_T_ConnectionID = other.O_T_ConnectionID;
-            this.T_O_ConnectionID = other.T_O_ConnectionID;
+            this.O_T_ConnectionId = other.O_T_ConnectionId;
+            this.T_O_ConnectionId = other.T_O_ConnectionId;
         }
 
     }

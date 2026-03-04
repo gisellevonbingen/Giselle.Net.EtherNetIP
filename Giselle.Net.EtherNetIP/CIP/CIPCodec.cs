@@ -11,7 +11,7 @@ namespace Giselle.Net.EtherNetIP.CIP
 {
     public class CIPCodec
     {
-        public const int ConnectionIDMax = 0xFFFFFFF;
+        public const int ConnectionIdMax = 0xFFFFFFF;
         public const int ConnectionSerialNumberMax = 0xFFFF;
 
         public static DataProcessor CreateDataProcessor(Stream baseStream) => new DataProcessor(baseStream) { IsLittleEndian = true };
@@ -30,7 +30,7 @@ namespace Giselle.Net.EtherNetIP.CIP
         public CommandItemUnconnectedDataRequest CreateGetAttribute(AttributePath path)
         {
             var udRequest = new CommandItemUnconnectedDataRequest();
-            udRequest.ServiceCode = path.AttributeID == 0 ? ServiceCode.GetAttributeAll : ServiceCode.GetAttributeSingle;
+            udRequest.ServiceCode = path.AttributeId == 0 ? ServiceCode.GetAttributeAll : ServiceCode.GetAttributeSingle;
             udRequest.Path = path.AsEPath();
 
             return udRequest;
@@ -62,23 +62,23 @@ namespace Giselle.Net.EtherNetIP.CIP
             udRequest.ServiceCode = ServiceCode.ForwardOpen;
             udRequest.Path = new EPath()
             {
-                EPathSegmentLogical.FromClassID(KnownClassID.ConnectionManager),
-                EPathSegmentLogical.FromInstanceID(0x01)
+                EPathSegmentLogical.FromClassId(KnownClassId.ConnectionManager),
+                EPathSegmentLogical.FromInstanceId(0x01)
             };
 
             var reqProcessor = udRequest.DataProcessor;
             reqProcessor.WriteByte(options.TickTime);
             reqProcessor.WriteByte(options.TimeoutTicks);
 
-            var connectionID = this.NextConnectionID();
-            var otConnectionIDReq = options.O_T_Assembly.ConnectionID != 0 ? options.O_T_Assembly.ConnectionID : (ushort)(connectionID + 0);
-            var toConnectionIDReq = options.T_O_Assembly.ConnectionID != 0 ? options.T_O_Assembly.ConnectionID : (ushort)(connectionID + 1);
-            reqProcessor.WriteUInt(otConnectionIDReq);
-            reqProcessor.WriteUInt(toConnectionIDReq);
+            var connectionId = this.NextConnectionId();
+            var otConnectionId = options.O_T_Assembly.ConnectionId != 0 ? options.O_T_Assembly.ConnectionId : (ushort)(connectionId + 0);
+            var toConnectionId = options.T_O_Assembly.ConnectionId != 0 ? options.T_O_Assembly.ConnectionId : (ushort)(connectionId + 1);
+            reqProcessor.WriteUInt(otConnectionId);
+            reqProcessor.WriteUInt(toConnectionId);
 
             var connectionSerialNumber = options.ConnectionSerialNumber != 0 ? options.ConnectionSerialNumber : (ushort)(this.NextConnectionSerialNumber() + 2);
             reqProcessor.WriteUShort(connectionSerialNumber);
-            reqProcessor.WriteUShort(options.OriginatorVenderID);
+            reqProcessor.WriteUShort(options.OriginatorVenderId);
             reqProcessor.WriteUInt(options.OriginatorSerialNumber);
             reqProcessor.WriteByte(options.TimeoutMultiplier);
 
@@ -97,18 +97,18 @@ namespace Giselle.Net.EtherNetIP.CIP
 
             var connectionPath = new EPath
             {
-                EPathSegmentLogical.FromClassID(options.ClassID),
-                EPathSegmentLogical.FromInstanceID(0x01)
+                EPathSegmentLogical.FromClassId(options.ClassId),
+                EPathSegmentLogical.FromInstanceId(0x01)
             };
 
             if (options.O_T_Assembly.ConnectionType != ConnectionType.Null)
             {
-                connectionPath.Add(EPathSegmentLogical.FromConnectionPointID(options.O_T_Assembly.InstanceID));
+                connectionPath.Add(EPathSegmentLogical.FromConnectionPointId(options.O_T_Assembly.InstanceId));
             }
 
             if (options.T_O_Assembly.ConnectionType != ConnectionType.Null)
             {
-                connectionPath.Add(EPathSegmentLogical.FromConnectionPointID(options.T_O_Assembly.InstanceID));
+                connectionPath.Add(EPathSegmentLogical.FromConnectionPointId(options.T_O_Assembly.InstanceId));
             }
 
             connectionPath.Write(reqProcessor);
@@ -145,8 +145,8 @@ namespace Giselle.Net.EtherNetIP.CIP
 
                     if (udResponse.Error == 0)
                     {
-                        result.O_T_ConnectionID = resProcessor.ReadUInt();
-                        result.T_O_ConnectionID = resProcessor.ReadUInt();
+                        result.O_T_ConnectionId = resProcessor.ReadUInt();
+                        result.T_O_ConnectionId = resProcessor.ReadUInt();
                         result.ConnectionSerialNumber = resProcessor.ReadUShort();
                     }
 
@@ -171,8 +171,8 @@ namespace Giselle.Net.EtherNetIP.CIP
             udRequest.ServiceCode = ServiceCode.ForwardClose;
             udRequest.Path = new EPath()
             {
-                EPathSegmentLogical.FromClassID(KnownClassID.ConnectionManager),
-                EPathSegmentLogical.FromInstanceID(0x01)
+                EPathSegmentLogical.FromClassId(KnownClassId.ConnectionManager),
+                EPathSegmentLogical.FromInstanceId(0x01)
             };
 
             var reqProcessor = udRequest.DataProcessor;
@@ -180,24 +180,24 @@ namespace Giselle.Net.EtherNetIP.CIP
             reqProcessor.WriteByte(options.TimeoutTicks);
 
             reqProcessor.WriteUShort(options.ConnectionSerialNumber);
-            reqProcessor.WriteUShort(options.OriginatorVenderID);
+            reqProcessor.WriteUShort(options.OriginatorVenderId);
             reqProcessor.WriteUInt(options.OriginatorSerialNumber);
 
             var connectionPath = new EPath
             {
-               EPathSegmentLogical.FromClassID(options.ClassID),
-               EPathSegmentLogical.FromInstanceID(0x01),
+               EPathSegmentLogical.FromClassId(options.ClassId),
+               EPathSegmentLogical.FromInstanceId(0x01),
             };
             connectionPath.HasReserved = true;
 
             if (options.O_T_ConnectionType != ConnectionType.Null)
             {
-                connectionPath.Add(EPathSegmentLogical.FromConnectionPointID(options.O_T_InstanceID));
+                connectionPath.Add(EPathSegmentLogical.FromConnectionPointId(options.O_T_InstanceId));
             }
 
             if (options.T_O_ConnectionType != ConnectionType.Null)
             {
-                connectionPath.Add(EPathSegmentLogical.FromConnectionPointID(options.T_O_InstanceID));
+                connectionPath.Add(EPathSegmentLogical.FromConnectionPointId(options.T_O_InstanceId));
             }
 
             connectionPath.Write(reqProcessor);
@@ -320,9 +320,9 @@ namespace Giselle.Net.EtherNetIP.CIP
             return num + num5 * 32;
         }
 
-        public int NextConnectionID()
+        public int NextConnectionId()
         {
-            return this.Random.Next(ConnectionIDMax);
+            return this.Random.Next(ConnectionIdMax);
         }
 
         public int NextConnectionSerialNumber()

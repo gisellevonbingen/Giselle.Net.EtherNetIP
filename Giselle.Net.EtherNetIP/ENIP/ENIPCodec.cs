@@ -10,19 +10,19 @@ namespace Giselle.Net.EtherNetIP.ENIP
 {
     public class ENIPCodec : CIPCodec
     {
-        public uint SessionID { get; set; }
+        public uint SessionId { get; set; }
         public ushort SendRRDataTimeout { get; set; }
 
         public ENIPCodec()
         {
-            this.SessionID = 0;
+            this.SessionId = 0;
             this.SendRRDataTimeout = 0;
         }
 
         public Encapsulation CreateEncapsulation()
         {
             var encapsulation = new Encapsulation();
-            encapsulation.SessionID = this.SessionID;
+            encapsulation.SessionId = this.SessionId;
 
             return encapsulation;
         }
@@ -43,14 +43,14 @@ namespace Giselle.Net.EtherNetIP.ENIP
             var request = new Encapsulation();
             request.Command = EncapsulationCommand.RegisterSession;
             request.DataProcessor.WriteUInt(1);
-            request.SessionID = 0;
+            request.SessionId = 0;
             return request;
         }
 
         public uint HandleRegisterSession(Encapsulation response)
         {
-            this.SessionID = response.SessionID;
-            return response.SessionID;
+            this.SessionId = response.SessionId;
+            return response.SessionId;
         }
 
         public Encapsulation CreateUnRegisterSession()
@@ -62,7 +62,7 @@ namespace Giselle.Net.EtherNetIP.ENIP
 
         public void HandleUnRegisterSession()
         {
-            this.SessionID = 0;
+            this.SessionId = 0;
         }
 
         public SendRRData CreateSendRRData(params CommandItem[] items) => this.CreateSendRRData((IEnumerable<CommandItem>)items);

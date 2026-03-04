@@ -159,11 +159,11 @@ namespace Giselle.Net.EtherNetIP.ENIP
             this.Codec.HandleUnRegisterSession();
         }
 
-        public DataProcessor GetAssemblyData(uint instanceId) => this.GetAttribute(new AttributePath(KnownClassID.Assembly, instanceId, KnownAssembyAttributeID.Data));
+        public DataProcessor GetAssemblyData(uint instanceId) => this.GetAttribute(new AttributePath(KnownClassId.Assembly, instanceId, KnownAssembyAttributeId.Data));
 
-        public ushort GetAssemblySize(uint instanceId) => this.GetAttribute(new AttributePath(KnownClassID.Assembly, instanceId, KnownAssembyAttributeID.Size)).ReadUShort();
+        public ushort GetAssemblySize(uint instanceId) => this.GetAttribute(new AttributePath(KnownClassId.Assembly, instanceId, KnownAssembyAttributeId.Size)).ReadUShort();
 
-        public void SetAssemblyData(uint instanceId, byte[] bytes) => this.SetAttribute(new AttributePath(KnownClassID.Assembly, instanceId, KnownAssembyAttributeID.Data), bytes);
+        public void SetAssemblyData(uint instanceId, byte[] bytes) => this.SetAttribute(new AttributePath(KnownClassId.Assembly, instanceId, KnownAssembyAttributeId.Data), bytes);
 
         public void SetAssemblyData(uint instanceId, Action<DataProcessor> bytesMaker)
         {
@@ -197,7 +197,7 @@ namespace Giselle.Net.EtherNetIP.ENIP
 
         public Random Random { get => this.Codec.Random; set => this.Codec.Random = value; }
 
-        public uint SessionId => this.Codec.SessionID;
+        public uint SessionId => this.Codec.SessionId;
 
         public bool ImplicitRun { get => this.Codec.ImplicitRun; set => this.Codec.ImplicitRun = value; }
         public bool ImplicitCOO { get => this.Codec.ImplicitCOO; set => this.Codec.ImplicitCOO = value; }
@@ -217,7 +217,7 @@ namespace Giselle.Net.EtherNetIP.ENIP
             this.UdpClient = this.Codec.CreateImplictMessagingClient(options, result, localAddress);
             this.ImplicitReceiveThread = new Thread(() => this.RunImplicitReceive(options));
             this.ImplicitReceiveThread.Start();
-            this.ImplicitSendThread = new Thread(() => this.RunImplicitSend(options, result.O_T_ConnectionID));
+            this.ImplicitSendThread = new Thread(() => this.RunImplicitSend(options, result.O_T_ConnectionId));
             this.ImplicitSendThread.Start();
 
             return this.LastForwardOpenResult;
@@ -257,7 +257,7 @@ namespace Giselle.Net.EtherNetIP.ENIP
 
         }
 
-        private void RunImplicitSend(ForwardOpenOptions options, uint o_t_ConnectionID)
+        private void RunImplicitSend(ForwardOpenOptions options, uint otConnectionId)
         {
             var udpClient = this.UdpClient;
             var targetEndPoint = new IPEndPoint(((IPEndPoint)this.TcpClient.Client.RemoteEndPoint).Address, options.O_T_UDPPort);
@@ -269,7 +269,7 @@ namespace Giselle.Net.EtherNetIP.ENIP
                     var item = new CommandItemSequencedAddress()
                     {
                         SequenceCount = i,
-                        ConnectionID = o_t_ConnectionID,
+                        ConnectionId = otConnectionId,
                     };
 
                     var data = new byte[options.O_T_Assembly.Length];

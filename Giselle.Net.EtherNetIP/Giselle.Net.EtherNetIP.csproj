@@ -69,8 +69,8 @@
     <Compile Include="CIP\EPathSegmentLogical.cs" />
     <Compile Include="ENIP\IdentifyAttributes.cs" />
     <Compile Include="CIP\IEPathSegment.cs" />
-    <Compile Include="CIP\KnownAssembyAttributeID.cs" />
-    <Compile Include="CIP\KnownClassAttributeID.cs" />
+    <Compile Include="CIP\KnownAssembyAttributeId.cs" />
+    <Compile Include="CIP\KnownClassAttributeId.cs" />
     <Compile Include="CIP\ServiceCode.cs" />
     <Compile Include="DataProcessor.cs" />
     <Compile Include="ENIP\ENIPSimpleClient.cs" />
@@ -89,8 +89,8 @@
     <Compile Include="CIP\ForwardOpenResult.cs" />
     <Compile Include="ENIP\InterfaceHandle.cs" />
     <Compile Include="IPv4EndPoint.cs" />
-    <Compile Include="CIP\KnownClassID.cs" />
-    <Compile Include="CIP\KnownIdentifyAttributeID.cs" />
+    <Compile Include="CIP\KnownClassId.cs" />
+    <Compile Include="CIP\KnownIdentifyAttributeId.cs" />
     <Compile Include="CIP\Priority.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CIP\RealTimeFormat.cs" />

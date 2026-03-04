@@ -6,7 +6,7 @@ namespace Giselle.Net.EtherNetIP.CIP
 {
     public class CommandItemSequencedAddress : CommandItem
     {
-        public uint ConnectionID { get; set; }
+        public uint ConnectionId { get; set; }
         public uint SequenceCount { get; set; }
 
         public CommandItemSequencedAddress()
@@ -18,7 +18,7 @@ namespace Giselle.Net.EtherNetIP.CIP
         {
             base.Read(processor);
 
-            this.ConnectionID = processor.ReadUInt();
+            this.ConnectionId = processor.ReadUInt();
             this.SequenceCount = processor.ReadUInt();
         }
 
@@ -26,7 +26,7 @@ namespace Giselle.Net.EtherNetIP.CIP
         {
             base.Write(processor);
 
-            processor.WriteUInt(this.ConnectionID);
+            processor.WriteUInt(this.ConnectionId);
             processor.WriteUInt(this.SequenceCount);
         }
 

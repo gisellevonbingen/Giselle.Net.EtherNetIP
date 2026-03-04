@@ -68,15 +68,15 @@ namespace Giselle.Net.EtherNetIP.Test
 
             Console.WriteLine("===== Start of Identify Class Attributes =====");
             Console.WriteLine($"Revision: {identifyClassAttributes.Revision}");
-            Console.WriteLine($"InstanceMaxID: {identifyClassAttributes.InstanceMaxID}");
+            Console.WriteLine($"InstanceMaxId: {identifyClassAttributes.InstanceMaxId}");
             Console.WriteLine($"InstanceCount: {identifyClassAttributes.InstanceCount}");
-            Console.WriteLine($"ClassAttributesMaxID: {identifyClassAttributes.ClassAttributesMaxID}");
-            Console.WriteLine($"InstanceAttributesMaxID: {identifyClassAttributes.InstanceAttributesMaxID}");
+            Console.WriteLine($"ClassAttributesMaxId: {identifyClassAttributes.ClassAttributesMaxId}");
+            Console.WriteLine($"InstanceAttributesMaxId: {identifyClassAttributes.InstanceAttributesMaxId}");
             Console.WriteLine("===== End of Identify Class Attributes =====");
             Console.WriteLine();
 
             Console.WriteLine("===== Start of Identify Attributes =====");
-            Console.WriteLine($"VenderID: {identifyAttributes.VenderID}");
+            Console.WriteLine($"VenderId: {identifyAttributes.VenderId}");
             Console.WriteLine($"DeviceType: {identifyAttributes.DeviceType}");
             Console.WriteLine($"ProductCode: {identifyAttributes.ProductCode}");
             Console.WriteLine($"Revision: {identifyAttributes.Revision}");
@@ -94,13 +94,13 @@ namespace Giselle.Net.EtherNetIP.Test
             var openOptions = new ForwardOpenOptions();
             openOptions.T_O_UDPPort = 2222; // Support alternate port, Default is 2222
 
-            openOptions.O_T_Assembly.InstanceID = 101; // Your O->T assembly instance id
+            openOptions.O_T_Assembly.InstanceId = 101; // Your O->T assembly instance id
             openOptions.O_T_Assembly.Length = 64;
             openOptions.O_T_Assembly.RealTimeFormat = RealTimeFormat.Header32Bit;
             openOptions.O_T_Assembly.ConnectionType = ConnectionType.PointToPoint;
             openOptions.O_T_Assembly.RequestPacketRate = 50000; // 50,000 ns = 50 ms;
 
-            openOptions.T_O_Assembly.InstanceID = 100; // Your T->O assembly instance id
+            openOptions.T_O_Assembly.InstanceId = 100; // Your T->O assembly instance id
             openOptions.T_O_Assembly.Length = 64;
             openOptions.T_O_Assembly.RealTimeFormat = RealTimeFormat.Modeless;
             openOptions.T_O_Assembly.ConnectionType = ConnectionType.PointToPoint;

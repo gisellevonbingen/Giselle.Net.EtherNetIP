@@ -13,14 +13,14 @@ namespace Giselle.Net.EtherNetIP.CIP
         public byte TimeoutTicks { get; set; }
 
         public ushort ConnectionSerialNumber { get; set; }
-        public ushort OriginatorVenderID { get; set; }
+        public ushort OriginatorVenderId { get; set; }
         public uint OriginatorSerialNumber { get; set; }
         /// <summary>
         /// 2 ^ (2 + multifiler)
         /// </summary>
         public byte TimeoutMultiplier { get; set; }
 
-        public uint ClassID { get; set; }
+        public uint ClassId { get; set; }
 
         public AbstractOptions()
         {
@@ -28,11 +28,11 @@ namespace Giselle.Net.EtherNetIP.CIP
             this.TimeoutTicks = 250;
 
             this.ConnectionSerialNumber = 0;
-            this.OriginatorVenderID = 0x00FF;
+            this.OriginatorVenderId = 0x00FF;
             this.OriginatorSerialNumber = 0xFFFFFFFF;
             this.TimeoutMultiplier = 3;
 
-            this.ClassID = KnownClassID.Assembly;
+            this.ClassId = KnownClassId.Assembly;
         }
 
         public AbstractOptions(AbstractOptions other)
@@ -41,11 +41,11 @@ namespace Giselle.Net.EtherNetIP.CIP
             this.TimeoutTicks = other.TimeoutTicks;
 
             this.ConnectionSerialNumber = other.ConnectionSerialNumber;
-            this.OriginatorVenderID = other.OriginatorVenderID;
+            this.OriginatorVenderId = other.OriginatorVenderId;
             this.OriginatorSerialNumber = other.OriginatorSerialNumber;
             this.TimeoutMultiplier = other.TimeoutMultiplier;
 
-            this.ClassID = other.ClassID;
+            this.ClassId = other.ClassId;
         }
 
     }

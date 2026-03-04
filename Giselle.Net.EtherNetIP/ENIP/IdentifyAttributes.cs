@@ -8,7 +8,7 @@ namespace Giselle.Net.EtherNetIP.ENIP
 {
     public class IdentifyAttributes
     {
-        public const uint ClassID = KnownClassID.Identify;
+        public const uint ClassId = KnownClassId.Identify;
 
         public Func<AttributePath, DataProcessor> GetAttribute { get; private set; }
 
@@ -17,32 +17,32 @@ namespace Giselle.Net.EtherNetIP.ENIP
             this.GetAttribute = getAttribute;
         }
 
-        public DataProcessor Read(uint attributeID = 0) => this.GetAttribute(new AttributePath(ClassID, 1, attributeID));
+        public DataProcessor Read(uint attributeId = 0) => this.GetAttribute(new AttributePath(ClassId, 1, attributeId));
 
-        public ushort VenderID => this.Read(KnownIdentifyAttributeID.VenderID).ReadUShort();
+        public ushort VenderId => this.Read(KnownIdentifyAttributeId.VenderId).ReadUShort();
 
-        public ushort DeviceType => this.Read(KnownIdentifyAttributeID.DeviceType).ReadUShort();
+        public ushort DeviceType => this.Read(KnownIdentifyAttributeId.DeviceType).ReadUShort();
 
-        public ushort ProductCode => this.Read(KnownIdentifyAttributeID.ProductCode).ReadUShort();
+        public ushort ProductCode => this.Read(KnownIdentifyAttributeId.ProductCode).ReadUShort();
 
-        public Revision Revision => new Revision(this.Read(KnownIdentifyAttributeID.Revision));
+        public Revision Revision => new Revision(this.Read(KnownIdentifyAttributeId.Revision));
 
-        public ushort Status => this.Read(KnownIdentifyAttributeID.Status).ReadUShort();
+        public ushort Status => this.Read(KnownIdentifyAttributeId.Status).ReadUShort();
 
-        public uint SerialNumber => this.Read(KnownIdentifyAttributeID.SerialNumber).ReadUInt();
+        public uint SerialNumber => this.Read(KnownIdentifyAttributeId.SerialNumber).ReadUInt();
 
         public string ProductName
         {
             get
             {
-                var processor = this.Read(KnownIdentifyAttributeID.ProductName);
+                var processor = this.Read(KnownIdentifyAttributeId.ProductName);
                 var length = processor.ReadByte();
                 return Encoding.UTF8.GetString(processor.ReadBytes(length));
             }
 
         }
 
-        public ClassAttributes ClassAttributes => new ClassAttributes(this.GetAttribute, ClassID);
+        public ClassAttributes ClassAttributes => new ClassAttributes(this.GetAttribute, ClassId);
     }
 
 }

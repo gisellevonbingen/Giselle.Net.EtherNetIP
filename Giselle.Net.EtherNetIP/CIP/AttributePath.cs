@@ -7,39 +7,39 @@ namespace Giselle.Net.EtherNetIP.CIP
 {
     public struct AttributePath : IEquatable<AttributePath>
     {
-        public uint ClassID { get; set; }
-        public uint InstanceID { get; set; }
-        public uint AttributeID { get; set; }
+        public uint ClassId { get; set; }
+        public uint InstanceId { get; set; }
+        public uint AttributeId { get; set; }
 
         public AttributePath(uint classId, uint instanceId, uint attributeId = 0) : this()
         {
-            this.ClassID = classId;
-            this.InstanceID = instanceId;
-            this.AttributeID = attributeId;
+            this.ClassId = classId;
+            this.InstanceId = instanceId;
+            this.AttributeId = attributeId;
         }
 
         public EPath AsEPath() => new EPath(this.AsEPathSegments());
 
         public IEnumerable<IEPathSegment> AsEPathSegments()
         {
-            yield return EPathSegmentLogical.FromClassID(this.ClassID);
-            yield return EPathSegmentLogical.FromInstanceID(this.InstanceID);
+            yield return EPathSegmentLogical.FromClassId(this.ClassId);
+            yield return EPathSegmentLogical.FromInstanceId(this.InstanceId);
 
-            if (this.AttributeID > 0)
+            if (this.AttributeId > 0)
             {
-                yield return EPathSegmentLogical.FromAttributeID(this.AttributeID);
+                yield return EPathSegmentLogical.FromAttributeId(this.AttributeId);
             }
 
         }
 
-        public override string ToString() => $"{this.ClassID}.{this.InstanceID}.{this.AttributeID}";
+        public override string ToString() => $"{this.ClassId}.{this.InstanceId}.{this.AttributeId}";
 
         public override int GetHashCode()
         {
             var hash = 17;
-            hash = hash * 31 + this.ClassID.GetHashCode();
-            hash = hash * 31 + this.InstanceID.GetHashCode();
-            hash = hash * 31 + this.AttributeID.GetHashCode();
+            hash = hash * 31 + this.ClassId.GetHashCode();
+            hash = hash * 31 + this.InstanceId.GetHashCode();
+            hash = hash * 31 + this.AttributeId.GetHashCode();
             return hash;
         }
 
@@ -55,17 +55,17 @@ namespace Giselle.Net.EtherNetIP.CIP
                 return false;
             }
 
-            if (this.ClassID != other.ClassID)
+            if (this.ClassId != other.ClassId)
             {
                 return false;
             }
 
-            if (this.InstanceID != other.InstanceID)
+            if (this.InstanceId != other.InstanceId)
             {
                 return false;
             }
 
-            if (this.AttributeID != other.AttributeID)
+            if (this.AttributeId != other.AttributeId)
             {
                 return false;
             }

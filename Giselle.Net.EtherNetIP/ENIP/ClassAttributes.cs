@@ -17,17 +17,17 @@ namespace Giselle.Net.EtherNetIP.ENIP
             this.ClassId = classId;
         }
 
-        public DataProcessor Read(uint attributeID = 0) => this.GetAttribute(new AttributePath(this.ClassId, 0, attributeID));
+        public DataProcessor Read(uint attributeId = 0) => this.GetAttribute(new AttributePath(this.ClassId, 0, attributeId));
 
-        public ushort Revision => this.Read(KnownClassAttributeID.Revision).ReadUShort();
+        public ushort Revision => this.Read(KnownClassAttributeId.Revision).ReadUShort();
 
-        public ushort InstanceMaxID => this.Read(KnownClassAttributeID.InstanceMaxID).ReadUShort();
+        public ushort InstanceMaxId => this.Read(KnownClassAttributeId.InstanceMaxId).ReadUShort();
 
-        public ushort InstanceCount => this.Read(KnownClassAttributeID.InstanceCount).ReadUShort();
+        public ushort InstanceCount => this.Read(KnownClassAttributeId.InstanceCount).ReadUShort();
 
-        public ushort ClassAttributesMaxID => this.Read(KnownClassAttributeID.ClassAttributesMaxID).ReadUShort();
+        public ushort ClassAttributesMaxId => this.Read(KnownClassAttributeId.ClassAttributesMaxId).ReadUShort();
 
-        public ushort InstanceAttributesMaxID => this.Read(KnownClassAttributeID.InstanceAttributesMaxID).ReadUShort();
+        public ushort InstanceAttributesMaxId => this.Read(KnownClassAttributeId.InstanceAttributesMaxId).ReadUShort();
 
     }
 

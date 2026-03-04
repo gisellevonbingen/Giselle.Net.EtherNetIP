@@ -38,8 +38,8 @@ namespace Giselle.Net.EtherNetIP.Test
                 Identify(client);
 
 
-                Console.WriteLine("Get: ClassID.InstanceID.AttributeID");
-                Console.WriteLine("Set: ClassID.InstanceID.AttributeID=Value1-Value2-...Value(n)");
+                Console.WriteLine("Get: ClassId.InstanceId.AttributeId");
+                Console.WriteLine("Set: ClassId.InstanceId.AttributeId=Value1-Value2-...Value(n)");
                 Console.WriteLine("Example");
                 Console.WriteLine("Get ProductName: 1.0.7");
                 Console.WriteLine("Set Aseembly   : 4.100.3=34-12");
@@ -85,15 +85,15 @@ namespace Giselle.Net.EtherNetIP.Test
 
             Console.WriteLine("===== Start of Identify Class Attributes =====");
             Console.WriteLine($"Revision: {identifyClassAttributes.Revision}");
-            Console.WriteLine($"InstanceMaxID: {identifyClassAttributes.InstanceMaxID}");
+            Console.WriteLine($"InstanceMaxId: {identifyClassAttributes.InstanceMaxId}");
             Console.WriteLine($"InstanceCount: {identifyClassAttributes.InstanceCount}");
-            Console.WriteLine($"ClassAttributesMaxID: {identifyClassAttributes.ClassAttributesMaxID}");
-            Console.WriteLine($"InstanceAttributesMaxID: {identifyClassAttributes.InstanceAttributesMaxID}");
+            Console.WriteLine($"ClassAttributesMaxId: {identifyClassAttributes.ClassAttributesMaxId}");
+            Console.WriteLine($"InstanceAttributesMaxId: {identifyClassAttributes.InstanceAttributesMaxId}");
             Console.WriteLine("===== End of Identify Class Attributes =====");
             Console.WriteLine();
 
             Console.WriteLine("===== Start of Identify Attributes =====");
-            Console.WriteLine($"VenderID: {identifyAttributes.VenderID}");
+            Console.WriteLine($"VenderId: {identifyAttributes.VenderId}");
             Console.WriteLine($"DeviceType: {identifyAttributes.DeviceType}");
             Console.WriteLine($"ProductCode: {identifyAttributes.ProductCode}");
             Console.WriteLine($"Revision: {identifyAttributes.Revision}");

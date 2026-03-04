@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Giselle.Net.EtherNetIP.CIP
 {
-    public static class KnownClassID
+    public static class KnownClassId
     {
         public const uint Identify = 0x0001;
         public const uint MessageRouter = 0x0002;

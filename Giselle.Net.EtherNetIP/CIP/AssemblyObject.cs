@@ -6,8 +6,8 @@ namespace Giselle.Net.EtherNetIP.CIP
 {
     public class AssemblyObject
     {
-        public uint ConnectionID { get; set; }
-        public byte InstanceID { get; set; }
+        public uint ConnectionId { get; set; }
+        public byte InstanceId { get; set; }
         public byte Length { get; set; }
         public bool OwnerRedundant { get; set; }
         public bool VariableLength { get; set; }
@@ -18,8 +18,8 @@ namespace Giselle.Net.EtherNetIP.CIP
 
         public AssemblyObject()
         {
-            this.ConnectionID = 0;
-            this.InstanceID = 0;
+            this.ConnectionId = 0;
+            this.InstanceId = 0;
             this.Length = 0;
             this.OwnerRedundant = false;
             this.VariableLength = false;
@@ -31,8 +31,8 @@ namespace Giselle.Net.EtherNetIP.CIP
 
         public AssemblyObject(AssemblyObject other)
         {
-            this.ConnectionID = other.ConnectionID;
-            this.InstanceID = other.InstanceID;
+            this.ConnectionId = other.ConnectionId;
+            this.InstanceId = other.InstanceId;
             this.Length = other.Length;
             this.OwnerRedundant = other.OwnerRedundant;
             this.VariableLength = other.VariableLength;

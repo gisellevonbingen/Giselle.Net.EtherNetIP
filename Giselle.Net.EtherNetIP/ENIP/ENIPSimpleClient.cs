@@ -159,9 +159,9 @@ namespace Giselle.Net.EtherNetIP.ENIP
             this.Codec.HandleUnRegisterSession();
         }
 
-        public DataProcessor GetAseemblyData(uint instanceId) => this.GetAttribute(new AttributePath(KnownClassID.Assembly, instanceId, KnownAssembyAttributeID.Data));
+        public DataProcessor GetAssemblyData(uint instanceId) => this.GetAttribute(new AttributePath(KnownClassID.Assembly, instanceId, KnownAssembyAttributeID.Data));
 
-        public ushort GetAsemblySize(uint instanceId) => this.GetAttribute(new AttributePath(KnownClassID.Assembly, instanceId, KnownAssembyAttributeID.Size)).ReadUShort();
+        public ushort GetAssemblySize(uint instanceId) => this.GetAttribute(new AttributePath(KnownClassID.Assembly, instanceId, KnownAssembyAttributeID.Size)).ReadUShort();
 
         public void SetAssemblyData(uint instanceId, byte[] bytes) => this.SetAttribute(new AttributePath(KnownClassID.Assembly, instanceId, KnownAssembyAttributeID.Data), bytes);
 
@@ -264,7 +264,7 @@ namespace Giselle.Net.EtherNetIP.ENIP
 
             try
             {
-                for (var i = 0u; ; i++)
+                for (var i = 0U; ; i++)
                 {
                     var item = new CommandItemSequencedAddress()
                     {

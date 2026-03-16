@@ -69,9 +69,9 @@ namespace Giselle.Net.EtherNetIP.ENIP
                 this.TcpClient.Connect(hostname);
                 this.TcpStream = this.TcpClient.GetStream();
                 this.TcpProcessor = CIPCodec.CreateDataProcessor(this.TcpStream);
-                this.RegisterSession();
 
                 this.Connected = true;
+                this.RegisterSession();
             }
             catch (Exception)
             {
@@ -84,9 +84,9 @@ namespace Giselle.Net.EtherNetIP.ENIP
         public void Close()
         {
             this.ForwardClose();
-
-            this.Connected = false;
             this.UnRegisterSession();
+            this.Connected = false;
+
             this.TcpClient.DisposeQuietly();
             this.TcpStream.DisposeQuietly();
         }

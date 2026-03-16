@@ -26,8 +26,9 @@ namespace Giselle.Net.EtherNetIP.Test
                     client.Connect(IPAddress.Parse(hostname));
                     Console.WriteLine("Connected");
                 }
-                catch
+                catch (Exception e)
                 {
+                    Console.WriteLine(e);
                     Console.WriteLine("ERROR : Can't connect");
                     Console.WriteLine("Enter to Exit");
                     Console.ReadLine();

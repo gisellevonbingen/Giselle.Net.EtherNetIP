@@ -24,7 +24,7 @@ namespace Giselle.Net.EtherNetIP
         {
             this.Family = other.Family;
             this.Port = other.Port;
-            this.Address = new IPAddress(other.Address.GetAddressBytes(), other.Address.ScopeId);
+            this.Address = other.Address;
             this.Reserved = other.Reserved.ToArray();
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -69,7 +70,6 @@ namespace Giselle.Net.EtherNetIP.ENIP
                 this.TcpClient.Connect(hostname);
                 this.TcpStream = this.TcpClient.GetStream();
                 this.TcpProcessor = CIPCodec.CreateDataProcessor(this.TcpStream);
-                this.RegisterSession();
 
                 this.Connected = true;
             }
@@ -84,9 +84,9 @@ namespace Giselle.Net.EtherNetIP.ENIP
         public void Close()
         {
             this.ForwardClose();
-
-            this.Connected = false;
             this.UnRegisterSession();
+            this.Connected = false;
+
             this.TcpClient.DisposeQuietly();
             this.TcpStream.DisposeQuietly();
         }
@@ -101,7 +101,8 @@ namespace Giselle.Net.EtherNetIP.ENIP
             using (var ms = new MemoryStream())
             {
                 request.Write(CIPCodec.CreateDataProcessor(ms));
-                this.TcpProcessor.WriteBytes(ms.ToArray());
+                var bytes = ms.ToArray();
+                this.TcpStream.Write(bytes, 0, bytes.Length);
             }
 
         }

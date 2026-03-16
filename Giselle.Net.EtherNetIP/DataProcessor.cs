@@ -40,25 +40,33 @@ namespace Giselle.Net.EtherNetIP
 
         public virtual long Remain { get { return this.Length - this.Position; } }
 
-        public virtual void Write(byte[] bytes, int offset, int count)
+        protected virtual void WriteInternal(byte[] buffer, int offset, int count)
         {
-            for (var i = 0; i < count; i++)
-            {
-                this.WriteByte(bytes[offset + i]);
-            }
+            this.BaseStream.Write(buffer, offset, count);
+            this.WriteLength += count;
+        }
 
+        protected virtual void WriteInternal(byte value)
+        {
+            this.BaseStream.WriteByte(value);
+            this.WriteLength++;
+        }
+
+        public virtual void Write(byte[] buffer, int offset, int count)
+        {
+            this.WriteInternal(buffer, offset, count);
         }
 
         public virtual void WriteByte(byte value)
         {
-            this.BaseStream.WriteByte(value);
-            this.WriteLength++;
+            this.WriteInternal(value);
         }
 
         public virtual void WriteBytes(byte[] value)
         {
             this.Write(value, 0, value.Length);
         }
+
         public virtual void WriteSByte(sbyte value)
         {
             this.WriteByte((byte)value);
@@ -134,28 +142,15 @@ namespace Giselle.Net.EtherNetIP
             this.WriteBytes(bytes);
         }
 
-        public virtual int Read(byte[] bytes, int offset, int count)
+
+        protected virtual int ReadInternal(byte[] buffer, int offset, int count)
         {
-            int length = 0;
-
-            for (var i = 0; i < count; i++)
-            {
-                if (this.ReadByte(out var data) == true)
-                {
-                    bytes[offset + i] = data;
-                    length++;
-                }
-                else
-                {
-                    break;
-                }
-
-            }
-
+            var length = this.BaseStream.Read(buffer, offset, count);
+            this.ReadLength += length;
             return length;
         }
 
-        public virtual bool ReadByte(out byte data)
+        protected virtual bool ReadInternal(out byte data)
         {
             var d = this.BaseStream.ReadByte();
 
@@ -173,9 +168,14 @@ namespace Giselle.Net.EtherNetIP
 
         }
 
+        public virtual int Read(byte[] buffer, int offset, int count)
+        {
+            return this.ReadInternal(buffer, offset, count);
+        }
+
         public virtual byte ReadByte()
         {
-            if (this.ReadByte(out var data) == true)
+            if (this.ReadInternal(out var data) == true)
             {
                 return data;
             }
@@ -188,6 +188,11 @@ namespace Giselle.Net.EtherNetIP
 
         public virtual byte[] ReadBytes(long length)
         {
+            if (length > int.MaxValue)
+            {
+                throw new ArgumentOutOfRangeException(nameof(length));
+            }
+
             var bytes = new byte[length];
             this.ReadBytes(bytes);
 
@@ -196,9 +201,11 @@ namespace Giselle.Net.EtherNetIP
 
         public virtual void ReadBytes(byte[] bytes)
         {
-            for (var i = 0; i < bytes.Length; i++)
+            var read = this.Read(bytes, 0, bytes.Length);
+
+            if (read != bytes.Length)
             {
-                bytes[i] = this.ReadByte();
+                throw new IOException();
             }
 
         }

@@ -201,11 +201,18 @@ namespace Giselle.Net.EtherNetIP
 
         public virtual void ReadBytes(byte[] bytes)
         {
-            var read = this.Read(bytes, 0, bytes.Length);
+            var count = bytes.Length;
 
-            if (read != bytes.Length)
+            while (count > 0)
             {
-                throw new IOException();
+                var read = this.Read(bytes, 0, count);
+
+                if (read == 0)
+                {
+                    throw new IOException();
+                }
+
+                count -= read;
             }
 
         }

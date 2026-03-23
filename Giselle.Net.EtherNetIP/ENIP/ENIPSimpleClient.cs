@@ -100,7 +100,7 @@ namespace Giselle.Net.EtherNetIP.ENIP
 
             using (var ms = new MemoryStream())
             {
-                request.Write(CIPCodec.CreateDataProcessor(ms));
+                request.Write(ENIPCodec.CreateDataProcessor(ms));
                 var bytes = ms.ToArray();
                 this.TcpStream.Write(bytes, 0, bytes.Length);
             }
@@ -133,7 +133,7 @@ namespace Giselle.Net.EtherNetIP.ENIP
             var requestEncapsulation = this.Codec.CreateEncapsulation(request);
             var responseEncapsulation = this.ExchangeEncapsulation(requestEncapsulation);
 
-            return this.Codec.ReadCommandData(responseEncapsulation, false).Items;
+            return this.Codec.HandleEncapsulation(responseEncapsulation, false).Items;
         }
 
         public RES ExchangeSendRRData<RES>(Func<CommandItems, RES> responseFunc, params CommandItem[] requests)

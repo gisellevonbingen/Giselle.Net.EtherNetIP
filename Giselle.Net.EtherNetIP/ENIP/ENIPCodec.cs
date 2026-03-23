@@ -36,7 +36,7 @@ namespace Giselle.Net.EtherNetIP.ENIP
             return encapsulation;
         }
 
-        public SendRRData ReadCommandData(Encapsulation response, bool isRequest) => new SendRRData(response.DataProcessor, isRequest);
+        public SendRRData HandleEncapsulation(Encapsulation response, bool isRequest) => new SendRRData(response.DataProcessor, isRequest);
 
         public Encapsulation CreateRegisterSession()
         {
